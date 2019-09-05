@@ -1,0 +1,41 @@
+#!/bin/bash
+# Bash Cheatsheet: https://devhints.io/bash
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
+
+PARAMS=""
+while (( "$#" )); do
+  case "$1" in
+    # flags
+    --to)
+      NAME="$2"
+      shift 2
+      break
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*|--*)
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *)
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+eval set -- "$PARAMS"
+
+# If --to isn't passed, then default to $USER
+NAME="${NAME:=$USER}"
+
+# commands
+#
+# shellcheck source=/dev/null
+#   sourcing scripts dynamically from $ROOT breaks shellcheck, for now.
+#   TODO: https://github.com/koalaman/shellcheck/wiki/SC1090#-in-shellcheck-latest
+case "$1" in
+  hello) source "$ROOT/src/example.sh" "$NAME";;
+esac
