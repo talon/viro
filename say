@@ -1,31 +1,29 @@
 #!/bin/bash
 # Bash Cheatsheet: https://devhints.io/bash
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
+ROOT="${0%/*}"
 
 PARAMS=""
-while (( "$#" )); do
-  case "$1" in
-    # flags
-    --to)
-      NAME="$2"
-      shift 2
-      break
-      ;;
-    --)
-      shift
-      break
-      ;;
-    -*|--*)
-      echo "Error: Unsupported flag $1" >&2
-      exit 1
-      ;;
-    *)
-      PARAMS="$PARAMS $1"
-      shift
-      ;;
-  esac
-done
+while (( "$#" )); do case "$1" in
+  --to)
+    NAME="$2"
+    shift 2
+    break
+    ;;
+  # end flag parsing
+  --)
+    shift
+    break
+    ;;
+  -*|--*)
+    echo "Error: Unsupported flag $1" >&2
+    exit 1
+    ;;
+  *)
+    PARAMS="$PARAMS $1"
+    shift
+    ;;
+esac; done
 eval set -- "$PARAMS"
 
 # If --to isn't passed, then default to $USER
@@ -38,4 +36,15 @@ NAME="${NAME:=$USER}"
 #   TODO: https://github.com/koalaman/shellcheck/wiki/SC1090#-in-shellcheck-latest
 case "$1" in
   hello) source "$ROOT/src/example.sh" "$NAME";;
+  # if no arguments are passed, ask what to say
+  *)
+    echo "What should I say?"
+    echo -n "> "
+    read -r repeat
+    echo "Hmm..."
+    sleep 1
+    echo "I think I can handle that!"
+    sleep 2
+    echo
+    echo "$repeat"
 esac
