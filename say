@@ -35,7 +35,7 @@ NAME="${NAME:=$USER}"
 #   sourcing scripts dynamically from $ROOT breaks shellcheck, for now.
 #   TODO: https://github.com/koalaman/shellcheck/wiki/SC1090#-in-shellcheck-latest
 case "$1" in
-  hello) source "$ROOT/src/example.sh" "$NAME";;
+  hello) source "$ROOT/src/hello.sh" "$NAME";;
   # if no arguments are passed, ask what to say
   *)
     echo "What should I say?"
