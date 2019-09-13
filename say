@@ -3,6 +3,42 @@
 
 ROOT="${0%/*}"
 
+case "$(uname -a)" in
+  Darwin*) OS="Darwin";;
+  Linux*)
+    OS="Linux"
+    grep -q Microsoft /proc/version \
+      && OS="WSL"
+    ;;
+esac
+
+case "$OS" in
+  WSL)
+    CHROME="/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"
+    CLIPBOARD="clip.exe"
+    ;;
+  Darwin)
+    CLIPBOARD="open -a 'Google Chrome'"
+    COPY="pbcopy"
+    ;;
+esac
+
+clip() {
+  [[ -z "$CLIPBOARD" ]] && \
+    echo "no \$CLIPBOARD available"; exit 1
+  "$COPY" < "$1"
+}
+
+chrome_open_url() {
+  [[ -z "$CHROME" ]] && \
+    echo "no \$CHROME available"; exit 1
+  "$CHROME" "$1"
+}
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
 PARAMS=""
 while (( "$#" )); do case "$1" in
   --to)
@@ -10,7 +46,6 @@ while (( "$#" )); do case "$1" in
     shift 2
     break
     ;;
-  # end flag parsing
   --)
     shift
     break
@@ -26,14 +61,12 @@ while (( "$#" )); do case "$1" in
 esac; done
 eval set -- "$PARAMS"
 
+# Logic
+# =====================================================================================================================
+
 # If --to isn't passed, then default to $USER
 NAME="${NAME:=$USER}"
 
-# commands
-#
-# shellcheck source=/dev/null
-#   sourcing scripts dynamically from $ROOT breaks shellcheck, for now.
-#   TODO: https://github.com/koalaman/shellcheck/wiki/SC1090#-in-shellcheck-latest
 case "$1" in
   hello) source "$ROOT/src/hello.sh" "$NAME";;
   # if no arguments are passed, ask what to say

@@ -4,21 +4,13 @@
 # Usage
 
 rename [`./say`](./say) to your desired command name
-
 ```sh
 mv say [your command name]
 ```
 
-make it executable
-
-```sh
-chmod +x [your command name]
-```
-
 edit it to your hearts content
-
 ```sh
-vim say
+$VISUAL say
 ```
 
 to make your command available from any directory be sure to add it's directory to your `PATH`!
