@@ -1,7 +1,7 @@
 #!/bin/bash
 # Bash Cheatsheet: https://devhints.io/bash
-ROOT="${0%/*}"
-source "$ROOT/src/normalize.sh";
+source "${0%/*}/src/core.sh";
+BIN="${0%/*}"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
@@ -33,18 +33,21 @@ case "$1" in
     echo "BROWSER=$BROWSER"
     echo "CLIPBOARD=$CLIPBOARD"
     ;;
-  remove) rm -rf "$ROOT/.bins/$2";;
-  show|view) ls "$ROOT/.bins";;
+  src)
+    "$VISUAL" "$BIN"
+    ;;
+  remove) rm -rf "$BIN/.bins/$2";;
+  show|view) ls "$BIN/.bins";;
   edit|create)
-    [ -e "$ROOT/.bins/" ] || mkdir -p "$ROOT/.bins/"
+    [ -e "$BIN/.bins/" ] || mkdir -p "$BIN/.bins/"
     if [ -z "$1" ]; then
-      "$VISUAL" "$ROOT/.bins/"
+      "$VISUAL" "$BIN/.bins/"
     else
-      [ -f "$ROOT/.bins/$2" ] || {
-        cp "$ROOT/src/bin.tmpl" "$ROOT/.bins/$2"
-        chmod +x "$ROOT/.bins/$2"
+      [ -f "$BIN/.bins/$2" ] || {
+        cp "$BIN/src/bin.tmpl" "$BIN/.bins/$2"
+        chmod +x "$BIN/.bins/$2"
       }
-      "$VISUAL" "$ROOT/.bins/$2"
+      "$VISUAL" "$BIN/.bins/$2"
     fi
     ;;
   *) echo "that did nothing. nothing was done";;

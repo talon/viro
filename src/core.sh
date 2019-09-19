@@ -1,51 +1,46 @@
-source "${0%/*}/../src/normalize.sh";
+case "$(uname -a)" in
+  Darwin*) OS="Darwin";;
+  Linux*)
+    OS="Linux"
+    grep -q Microsoft /proc/version \
+      && OS="WSL"
+    ;;
+esac
+
+case "$OS" in
+  WSL)
+    BROWSER="/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"
+    CLIPBOARD="clip.exe"
+    ;;
+  Darwin)
+    # on MacOS `open` uses the default browser
+    BROWSER="open"
+    CLIPBOARD="pbcopy"
+    ;;
+esac
+
+use() { source "${0%/*}/../src/$1.sh"; }
+
+clip() {
+  [[ -z "$CLIPBOARD" ]] && { echo "no \$CLIPBOARD available"; exit 1; }
+  "$CLIPBOARD"
+}
+
+open_url() {
+  [[ -z "$BROWSER" ]] && { echo "no \$BROWSER available"; exit 1; }
+  "$BROWSER" "$1"
+}
 
 is_installed() {
   case "$OS" in
     WSL) dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed" >/dev/null;;
-    *) echo "[BIN] is_installed: $OS is not yet supported";;
+    *) echo "[BIN] is_installed: $OS is not yet supported" && exit 1;;
   esac
 }
 
 ensure() {
   case "$OS" in
     WSL) is_installed "$1" || (echo "[INFO] installing: $1" && sudo apt install -y "$1");;
-    *) echo "[BIN] ensure: $OS is not yet supported";;
+    *) echo "[BIN] ensure: $OS is not yet supported" && exit 1;;
   esac
-
-}
-
-repo() {
-  case "$OS" in
-    WSL)
-      echo "[INFO] adding the $1 repository and updating"
-      ensure software-properties-common \
-        && sudo add-apt-repository "$1" -y \
-        && sudo apt-get update
-      ;;
-    *) echo "[BIN] repo: $OS is not supported";;
-  esac
-}
-
-template() {
-  exists "$2" || {
-    echo "[INFO] creating $2 from template $1";
-    mkdir -p "$(dirname "$2")";
-    envsubst > "$2" < "$1";
-  }
-}
-
-clone() {
-  exists "$2" || {
-    echo "[INFO] cloning $1";
-    mkdir -p "$(dirname "$2")";
-    git clone "$1" "$2";
-  }
-}
-
-download() {
-  exists "$2" || {
-    echo "[INFO] downloading $1 via curl";
-    curl -fLo "$2" --create-dirs "$1"
-  }
 }

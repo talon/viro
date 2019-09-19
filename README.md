@@ -16,3 +16,5 @@ bin remove [name] # remove bin
 bin show # show all bins
 bin # edit the folder of bins with $VISUAL
 ```
+
+[![asciinema]( https://asciinema.org/a/269700.svg)](https://asciinema.org/a/269700)
