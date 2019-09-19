@@ -4,7 +4,7 @@
 # Install
 
 ```
-git clone https://github.com/talon/bash-cli-template ~/.bin/
+git clone https://github.com/talon/bin ~/.bin/
 echo "PATH=PATH:$HOME/.bin/:$HOME/.bin/.bins/" >> ~/.bashrc
 ```
 > basically just put this repo somewhere and add it to your `PATH`
