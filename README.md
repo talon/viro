@@ -20,4 +20,4 @@ bin # edit the folder of bins with $VISUAL
 
 # Example
 
-[![asciinema]( https://asciinema.org/a/269700.svg)](https://asciinema.org/a/269700)
+[![asciicast](https://asciinema.org/a/ILCw12FgJzkdVK3dcX73htpnk.svg)](https://asciinema.org/a/ILCw12FgJzkdVK3dcX73htpnk)
