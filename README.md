@@ -1,24 +1,18 @@
 # bash-cli
 > template for building command-line interfaces with Bash ⌨
 
+# Install
+
+```
+git clone https://github.com/talon/bash-cli-template ~/.bin/
+echo "PATH=PATH:$HOME/.bin/:$HOME/.bin/.bins/" >> ~/.bashrc
+```
+
 # Usage
 
-rename [`./say`](./say) to your desired command name
-```sh
-mv say [your command name]
 ```
-
-edit it to your hearts content
-```sh
-$VISUAL say
-```
-
-to make your command available from any directory be sure to add it's directory to your `PATH`!
-
-# Example
-
-the template `./say` command comes with an example parameter `hello` that takes an optional flag `--to`
-
-```sh
-./say hello --to cpubae
+bin create [name] # create (or edit) [name] with $VISUAL
+bin remove [name] # remove bin
+bin show # show all bins
+bin # edit the folder of bins with $VISUAL
 ```
