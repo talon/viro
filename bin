@@ -1,0 +1,51 @@
+#!/bin/bash
+# Bash Cheatsheet: https://devhints.io/bash
+ROOT="${0%/*}"
+source "$ROOT/src/normalize.sh";
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  --)
+    shift
+    break
+    ;;
+  -*|--*)
+    echo "Error: Unsupported flag $1" >&2
+    exit 1
+    ;;
+  *)
+    PARAMS="$PARAMS $1"
+    shift
+    ;;
+esac; done
+eval set -- "$PARAMS"
+
+# Logic
+# =====================================================================================================================
+
+case "$1" in
+  meta)
+    echo "OS=$OS"
+    echo "BROWSER=$BROWSER"
+    echo "CLIPBOARD=$CLIPBOARD"
+    ;;
+  remove) rm -rf "$ROOT/.bins/$2";;
+  show|view) ls "$ROOT/.bins";;
+  edit|create)
+    [ -e "$ROOT/.bins/" ] || mkdir -p "$ROOT/.bins/"
+    if [ -z "$1" ]; then
+      "$VISUAL" "$ROOT/.bins/"
+    else
+      [ -f "$ROOT/.bins/$2" ] || {
+        cp "$ROOT/src/bin.tmpl" "$ROOT/.bins/$2"
+        chmod +x "$ROOT/.bins/$2"
+      }
+      "$VISUAL" "$ROOT/.bins/$2"
+    fi
+    ;;
+  *) echo "that did nothing. nothing was done";;
+esac
