@@ -5,9 +5,9 @@
 
 ```
 git clone https://github.com/talon/bash-cli-template ~/.bin/
-echo "PATH=PATH:$HOME/.bin/:$HOME/.bin/.bins/" >> ~/.bashrc
+echo "PATH=PATH:$HOME/.bin/bins" >> ~/.bashrc
 ```
-> basically just put this repo somewhere and add it to your `PATH`
+> basically just put this repo somewhere and add [bins](./bins)  to your `PATH` 
 
 # Usage
 
@@ -15,7 +15,7 @@ echo "PATH=PATH:$HOME/.bin/:$HOME/.bin/.bins/" >> ~/.bashrc
 bin create [name] # create (or edit) [name] with $VISUAL
 bin remove [name] # remove bin
 bin show # show all bins
-bin # edit the folder of bins with $VISUAL
+bin src # create a .sh file that other bins can `use`
 ```
 
 # Example

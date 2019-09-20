@@ -1,0 +1,3 @@
+useful() {
+  echo "so useful"
+}
