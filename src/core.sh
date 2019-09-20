@@ -7,6 +7,8 @@ case "$(uname -a)" in
     ;;
 esac
 
+DISTRO="$(lsb_release -id | head -n 1 | awk '{print $3}')"
+
 case "$OS" in
   WSL)
     BROWSER="/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"
@@ -32,15 +34,15 @@ open_url() {
 }
 
 is_installed() {
-  case "$OS" in
-    WSL) dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed" >/dev/null;;
-    *) echo "[BIN] is_installed: $OS is not yet supported" && exit 1;;
+  case "$DISTRO" in
+    Ubuntu) dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed" >/dev/null;;
+    *) echo "[BIN] is_installed: $DISTRO is not yet supported" && exit 1;;
   esac
 }
 
 ensure() {
-  case "$OS" in
-    WSL) is_installed "$1" || (echo "[INFO] installing: $1" && sudo apt install -y "$1");;
-    *) echo "[BIN] ensure: $OS is not yet supported" && exit 1;;
+  case "$DISTRO" in
+    Ubuntu) is_installed "$1" || (echo "[INFO] installing: $1" && sudo apt install -y "$1");;
+    *) echo "[BIN] ensure: $DISTRO is not yet supported" && exit 1;;
   esac
 }
