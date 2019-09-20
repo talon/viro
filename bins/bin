@@ -55,5 +55,7 @@ case "$1" in
       "$VISUAL" "$BIN/bins/$2"
     fi
     ;;
+  branch) (cd "$BIN" && git checkout "$2");;
+  commit) (cd "$BIN" && git add -A . && git commit -m "bin state saved");;
   *) echo "that did nothing. nothing was done";;
 esac
