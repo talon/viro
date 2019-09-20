@@ -58,6 +58,7 @@ case "$1" in
     fi
     ;;
   branch) (cd "$BIN" && git checkout "$2");;
-  commit) (cd "$BIN" && git add -A . && git commit -m "bin state saved");;
+  commit) (cd "$BIN" && git add -A . && git commit -m "bin commit");;
+  push) (cd "$BIN" && git push);;
   *) echo "that did nothing. nothing was done";;
 esac
