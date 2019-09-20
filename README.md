@@ -7,7 +7,7 @@
 git clone https://github.com/talon/bash-cli-template ~/.bin/
 echo "PATH=PATH:$HOME/.bin/bins" >> ~/.bashrc
 ```
-> basically just put this repo somewhere and add [bins](./bins)  to your `PATH` 
+> basically just put this repo somewhere and add [bins](./bins)  to your `PATH`
 
 # Usage
 
@@ -20,4 +20,4 @@ bin src # create a .sh file that other bins can `use`
 
 # Example
 
-[![asciinema]( https://asciinema.org/a/269700.svg)](https://asciinema.org/a/269700)
+[![asciicast](https://asciinema.org/a/269730.svg)](https://asciinema.org/a/269730)
