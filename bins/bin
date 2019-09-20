@@ -44,6 +44,7 @@ case "$1" in
     ;;
   remove) rm -rf "$BIN/bins/$2";;
   show|view) ls "$BIN/bins";;
+  rename) mv "$BIN/bins/$2" "$BIN/bins/$3";;
   edit|create)
     if [ -z "$1" ]; then
       "$VISUAL" "$BIN/bins/"

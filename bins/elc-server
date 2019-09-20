@@ -1,0 +1,31 @@
+#!/bin/bash
+# Bash Cheatsheet: https://devhints.io/bash
+source "${0%/*}/../src/core.sh";
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  --)
+    shift
+    break
+    ;;
+  -*|--*)
+    echo "Error: Unsupported flag $1" >&2
+    exit 1
+    ;;
+  *)
+    PARAMS="$PARAMS $1"
+    shift
+    ;;
+esac; done
+eval set -- "$PARAMS"
+
+case "$1" in
+  *)
+    echo "connecting to $ELC_USER@$ELC_JUMPHOST"
+    ssh "$ELC_USER@$ELC_JUMPHOST"
+    ;;
+esac
