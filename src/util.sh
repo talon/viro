@@ -1,3 +1,0 @@
-useful() {
-  echo "so useful"
-}
