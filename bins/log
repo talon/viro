@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash Cheatsheet: https://devhints.io/bash
-source "${0%/*}/../src/core.sh";
+# source "${0%/*}/../src/core.sh";
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
