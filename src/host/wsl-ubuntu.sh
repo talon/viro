@@ -20,7 +20,7 @@ repo() {
 # TODO: is envsubst always available in 18.04 Ubuntu? should we check that it's installed?
 #       I only ask cause `ensure` doesn't work for it
 template() {
-  exists "$2" || {
+  [[ -e "$2" ]] || {
     echo "[INFO] creating $2 from template $1";
     mkdir -p "$(dirname "$2")";
     envsubst > "$2" < "$1";
@@ -28,7 +28,7 @@ template() {
 }
 
 clone() {
-  exists "$2" || {
+  [[ -e "$2" ]] || {
     echo "[INFO] cloning $1";
     mkdir -p "$(dirname "$2")";
     git clone "$1" "$2";
@@ -36,7 +36,7 @@ clone() {
 }
 
 download() {
-  exists "$2" || {
+  [[ -e "$2" ]] || {
     echo "[INFO] downloading $1 via curl";
     curl -fLo "$2" --create-dirs "$1"
   }

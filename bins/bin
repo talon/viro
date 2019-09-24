@@ -1,6 +1,8 @@
 #!/bin/bash
 BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
+source "$BIN_HOME/src/log.sh"
+
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
 # =====================================================================================================================
@@ -12,7 +14,7 @@ while (( "$#" )); do case "$1" in
     break
     ;;
   -*|--*)
-    echo "Error: Unsupported flag $1" >&2
+    log "Error: Unsupported flag $1" >&2
     exit 1
     ;;
   *)
@@ -38,5 +40,5 @@ case "$1" in
     fi
     ;;
   hack) "$VISUAL" "$BIN_HOME";;
-  *) echo "that did nothing. nothing was done";;
+  *) log "that did nothing. nothing was done";;
 esac

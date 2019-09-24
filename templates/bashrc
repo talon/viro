@@ -4,11 +4,12 @@ BIN_HOME="/c/Users/tpoole/Documents/GitHub/bin"
 [[ -f "$BIN_HOME/user/aliases" ]] && source "$BIN_HOME/user/aliases";
 
 source "$BIN_HOME/src/host/wsl-ubuntu.sh"
+source "$BIN_HOME/src/log.sh"
 
 packages() {
-  echo "[INFO] ensuring packages are available"
+  log "ensuring packages are available"
   nvim -v | grep -q -E "NVIM v0.3.*" || {
-    echo "[INFO] adding neovim repo and upgrading"
+    log "adding neovim repo and upgrading"
     repo ppa:neovim-ppa/stable;
     sudo apt update;
     sudo apt upgrade -y;
@@ -23,7 +24,7 @@ packages() {
   ensure tmux
   ensure tig
   is_installed docker-ce || {
-    echo "[INFO] adding docker-ce repo and installing"
+    log "adding docker-ce repo and installing"
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -;
     sudo apt-key fingerprint 0EBFCD88;
     repo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable";
