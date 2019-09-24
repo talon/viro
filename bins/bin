@@ -1,7 +1,5 @@
 #!/bin/bash
-# Bash Cheatsheet: https://devhints.io/bash
-BIN="$( ( cd ../ && dirname "${0%/*}" ) )";
-source "$BIN/src/core.sh"
+BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
@@ -24,39 +22,21 @@ while (( "$#" )); do case "$1" in
 esac; done
 eval set -- "$PARAMS"
 
-# Logic
-# =====================================================================================================================
-
 case "$1" in
-  meta)
-    echo "BIN=$BIN"
-    echo "OS=$OS"
-    echo "DISTRO=$DISTRO"
-    echo "BROWSER=$BROWSER"
-    echo "CLIPBOARD=$CLIPBOARD"
-    ;;
-  src)
-    if [ -z "$1" ]; then
-      "$VISUAL" "$BIN/src/"
-    else
-      "$VISUAL" "$BIN/src/$2.sh"
-    fi
-    ;;
-  remove) rm -rf "$BIN/bins/$2";;
-  show|view) ls "$BIN/bins";;
-  rename) mv "$BIN/bins/$2" "$BIN/bins/$3";;
+  remove) rm -rf "$BIN_HOME/bins/$2";;
+  show|view) ls "$BIN_HOME/bins";;
+  rename) mv "$BIN_HOME/bins/$2" "$BIN_HOME/bins/$3";;
   edit|create)
     if [ -z "$1" ]; then
-      "$VISUAL" "$BIN/bins/"
+      "$VISUAL" "$BIN_HOME/bins/"
     else
-      [ -x "$BIN/bins/$2" ] || {
-        cp "$BIN/bin.tmpl" "$BIN/bins/$2"
-        chmod +x "$BIN/bins/$2"
+      [ -x "$BIN_HOME/bins/$2" ] || {
+        cp "$BIN_HOME/templates/bin" "$BIN_HOME/bins/$2"
+        chmod +x "$BIN_HOME/bins/$2"
       }
-      "$VISUAL" "$BIN/bins/$2"
+      "$VISUAL" "$BIN_HOME/bins/$2"
     fi
     ;;
-  branch) (cd "$BIN" && git checkout "$2");;
-  commit) (cd "$BIN" && git add -A . && git commit -m "bin state saved");;
+  hack) "$VISUAL" "$BIN_HOME";;
   *) echo "that did nothing. nothing was done";;
 esac
