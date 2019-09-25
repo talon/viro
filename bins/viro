@@ -1,0 +1,61 @@
+#!/bin/bash
+BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+
+source "$BIN_HOME/src/log.sh"
+
+VIRO="$BIN_HOME/user/ENV"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  --secret)
+    VIRO="$BIN_HOME/user/secret_ENV"
+    shift;;
+  --)
+    shift
+    break
+    ;;
+  -*|--*)
+    log "Error: Unsupported flag $1" >&2
+    exit 1
+    ;;
+  *)
+    PARAMS="$PARAMS $1"
+    shift
+    ;;
+esac; done
+eval set -- "$PARAMS"
+
+case "$1" in
+  show|view) cat "$VIRO";;
+  edit) "$VISUAL" "$VIRO";;
+  a|add|create|new)
+    [[ -z "$2" ]] && read -rp "name: " name
+    name="${name:-"$2"}"
+    name="${name^^}" # ALL_CAPS
+    [[ -z "$3" ]] && read -rp "value: " value
+    value="${value:-"${@:3}"}"
+
+    sed -i "/export $name=/d" "$VIRO"
+    echo "export $name='$value'" >> "$VIRO"
+    log "added: $(grep "export $name" "$VIRO")"
+    exec bash
+    ;;
+  r|rm|remove)
+    [[ -z "$2" ]] && {
+      PS3="[$( basename "${BASH_SOURCE[0]}" )] Which one? "
+      select name in $( sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' ); do
+        break
+      done
+    }
+    name="${name:-"$2"}"
+    name="${name^^}" # ALL_CAPS
+
+    log "removed: $( grep "export $name" "$VIRO" )"
+    sed -i "/export $name=/d" "$VIRO"
+    exec bash
+    ;;
+esac
