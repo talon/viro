@@ -32,6 +32,7 @@ packages() {
     sudo usermod -aG docker "$USER";
   }
   ensure docker-compose
+  ensure gettext
 }
 
 [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"

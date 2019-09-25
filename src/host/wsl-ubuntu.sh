@@ -17,8 +17,6 @@ repo() {
     && sudo apt-get update
 }
 
-# TODO: is envsubst always available in 18.04 Ubuntu? should we check that it's installed?
-#       I only ask cause `ensure` doesn't work for it
 template() {
   [[ -e "$2" ]] || {
     echo "[INFO] creating $2 from template $1";
