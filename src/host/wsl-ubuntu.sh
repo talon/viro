@@ -9,13 +9,13 @@ open_url() { "$BROWSER" "$1"; }
 
 is_installed() { dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed" >/dev/null; }
 
-ensure() { is_installed "$1" || (log "installing: $1" && apt install -y "$1"); }
+ensure() { is_installed "$1" || (log "installing: $1" && sudo apt install -y "$1"); }
 
 repo() {
   log "adding the $1 repository and updating"
   ensure software-properties-common \
-    && add-apt-repository "$1" -y \
-    && apt-get update
+    && sudo add-apt-repository "$1" -y \
+    && sudo apt update
 }
 
 clone() {

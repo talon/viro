@@ -8,36 +8,32 @@ source "$BIN_HOME/src/log.sh"
 
 packages() {
   log "ensuring packages are available"
-  apt update && apt -f dist-upgrade && apt -f install
   ensure curl
-  apt install -yf perl-base=5.26.1-6
-  ensure netbase
-  ensure perl
   ensure git
   ensure openssh-server
   ensure tmux
-  # nvim -v | grep -q -E "NVIM v0.3.*" || {
-  #   log "adding neovim repo and upgrading"
-  #   repo ppa:neovim-ppa/stable;
-  #   apt update;
-  #   apt upgrade -y;
-  #   ensure neovim;
-  # }
-  # ensure python-dev;
-  # ensure python-pip;
-  # ensure python3-dev;
-  # ensure python3-pip;
-  # ensure python-neovim;
-  # ensure python3-neovim;
-  # ensure tig
-  # is_installed docker-ce || {
-  #   log "adding docker-ce repo and installing"
-  #   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -;
-  #   apt-key fingerprint 0EBFCD88;
-  #   repo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable";
-  #   ensure docker-ce;
-  # }
-  # ensure docker-compose
+  nvim -v | grep -q -E "NVIM v0.3.*" || {
+    log "adding neovim repo and upgrading"
+    repo ppa:neovim-ppa/stable;
+    apt update;
+    apt upgrade -y;
+    ensure neovim;
+  }
+  ensure python-dev;
+  ensure python-pip;
+  ensure python3-dev;
+  ensure python3-pip;
+  ensure python-neovim;
+  ensure python3-neovim;
+  ensure tig
+  is_installed docker-ce || {
+    log "adding docker-ce repo and installing"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -;
+    apt-key fingerprint 0EBFCD88;
+    repo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable";
+    ensure docker-ce;
+  }
+  ensure docker-compose
 }
 
 [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
