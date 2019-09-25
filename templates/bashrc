@@ -10,7 +10,7 @@ packages() {
   log "ensuring packages are available"
   ensure curl
   ensure git
-  ensure openssh-server
+  ensure openssh-client
   ensure tmux
   nvim -v | grep -q -E "NVIM v0.3.*" || {
     log "adding neovim repo and upgrading"
