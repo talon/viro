@@ -9,19 +9,10 @@ apply() {
   sed -i '/BIN_HOME=/d' "$HOME/.bashrc"
   sed -i "1i BIN_HOME=\"$BIN_HOME\"" "$HOME/.bashrc"
   log "applied"
+  exec bash
 }
 
 case "$1" in
-  alias)
-    [[ -z "$2" ]] && read -rp "name: " name
-    name="${name:-"$2"}"
-    [[ -z "$3" ]] && read -rp "command: " cmd
-    cmd="${cmd:-"${@:3}"}"
-    sed -i "/$name=/d" "$BIN_HOME/user/aliases"
-    echo "alias $name='$cmd'" >> "$BIN_HOME/user/aliases"
-    ;;
-  # env) ;;
-  # secret) ;;
   bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
   apply) apply;;
 esac

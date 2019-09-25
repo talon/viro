@@ -38,13 +38,13 @@ packages() {
 [[ -n "$PS1" ]] && [[ -s "$BASE16_SHELL/profile_helper.sh" ]] && eval "$("$BASE16_SHELL/profile_helper.sh")";
 [[ -f "$HOME/.fzf.bash" ]] && source "$HOME/.fzf.bash";
 [[ -z "$TMUX"  ]] && {
+  ssh-keygen -q -N "" < /dev/zero > /dev/null
+  packages
   clone https://github.com/chriskempson/base16-shell.git "$BASE16_SHELL"
   download "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" "$HOME/.local/share/nvim/site/autoload/plug.vim"
   template "$BIN_HOME/templates/init.vim" "$HOME/.config/nvim/init.vim"
   clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
   template "$BIN_HOME/templates/tmux.conf" "$HOME/.tmux.conf"
   clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
-  ssh-keygen -q -N "" < /dev/zero > /dev/null
-  packages
   tmux attach || exec tmux new-session
 }

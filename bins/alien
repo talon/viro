@@ -1,0 +1,59 @@
+#!/bin/bash
+BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+
+source "$BIN_HOME/src/log.sh"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  --)
+    shift
+    break
+    ;;
+  -*|--*)
+    log "Error: Unsupported flag $1" >&2
+    exit 1
+    ;;
+  *)
+    PARAMS="$PARAMS $1"
+    shift
+    ;;
+esac; done
+eval set -- "$PARAMS"
+
+case "$1" in
+  show|view)
+    cat "$BIN_HOME/user/aliases"
+    ;;
+  edit)
+    "$VISUAL" "$BIN_HOME/user/aliases"
+    exec bash
+    ;;
+  a|add|create|new)
+    [[ -z "$2" ]] && read -rp "name: " name
+    name="${name:-"$2"}"
+    [[ -z "$3" ]] && read -rp "command: " cmd
+    cmd="${cmd:-"${@:3}"}"
+
+    sed -i "/$name=/d" "$BIN_HOME/user/aliases"
+    echo "alias $name='$cmd'" >> "$BIN_HOME/user/aliases"
+    log "added: $(grep "alias $name" "$BIN_HOME/user/aliases")"
+    exec bash
+    ;;
+  r|rm|remove)
+    [[ -z "$2" ]] && {
+      PS3="[$( basename "${BASH_SOURCE[0]}" )] Which one? "
+      select name in $( sed -e 's/=./ /' < "$BIN_HOME/user/aliases" | awk '{print $2}' ); do
+        break
+      done
+    }
+    name="${name:-"$2"}"
+
+    log "removed: $(grep "alias $name" "$BIN_HOME/user/aliases")"
+    sed -i "/$name=/d" "$BIN_HOME/user/aliases"
+    exec bash
+    ;;
+esac
