@@ -29,7 +29,18 @@ while (( "$#" )); do case "$1" in
 esac; done
 eval set -- "$PARAMS"
 
+apply() {
+  rm  "$HOME/.bashrc"
+  cp "$BIN_HOME/templates/bashrc" "$HOME/.bashrc"
+  sed -i '/BIN_HOME=/d' "$HOME/.bashrc"
+  sed -i "1i BIN_HOME=\"$BIN_HOME\"" "$HOME/.bashrc"
+  log "applied"
+  exec bash
+}
+
 case "$1" in
+  bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
+  apply) apply;;
   show|view) cat "$VIRO";;
   edit) "$VISUAL" "$VIRO";;
   a|add|create|new)
