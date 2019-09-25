@@ -1,6 +1,7 @@
+source "$BIN_HOME/src/log.sh"
+
 BROWSER="/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"
 CLIPBOARD="clip.exe"
-DISTRO="$(lsb_release -id | head -n 1 | awk '{print $3}')"
 
 clip() { "$CLIPBOARD"; }
 
@@ -8,26 +9,18 @@ open_url() { "$BROWSER" "$1"; }
 
 is_installed() { dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed" >/dev/null; }
 
-ensure() { is_installed "$1" || (echo "[INFO] installing: $1" && sudo apt install -y "$1"); }
+ensure() { is_installed "$1" || (log "installing: $1" && apt install -y "$1"); }
 
 repo() {
-  echo "[INFO] adding the $1 repository and updating"
+  log "adding the $1 repository and updating"
   ensure software-properties-common \
-    && sudo add-apt-repository "$1" -y \
-    && sudo apt-get update
-}
-
-template() {
-  [[ -e "$2" ]] || {
-    echo "[INFO] creating $2 from template $1";
-    mkdir -p "$(dirname "$2")";
-    envsubst > "$2" < "$1";
-  }
+    && add-apt-repository "$1" -y \
+    && apt-get update
 }
 
 clone() {
   [[ -e "$2" ]] || {
-    echo "[INFO] cloning $1";
+    log "cloning $1";
     mkdir -p "$(dirname "$2")";
     git clone "$1" "$2";
   }
@@ -35,7 +28,7 @@ clone() {
 
 download() {
   [[ -e "$2" ]] || {
-    echo "[INFO] downloading $1 via curl";
+    log "downloading $1 via curl";
     curl -fLo "$2" --create-dirs "$1"
   }
 }

@@ -1,0 +1,6 @@
+version: "3"
+services:
+  bin:
+    image: alpine
+    volumes:
+      - .:/root/viro/
