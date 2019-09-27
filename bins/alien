@@ -29,7 +29,7 @@ eval set -- "$PARAMS"
 
 mkdir -p "$(dirname "$ALIEN")" && touch "$ALIEN"
 case "$1" in
-  ls|show|view) sed -e "s/alias/[alien]/" -e "s/'//g" < "$ALIEN" | column -t -s=;;
+  ls|show|view) sed -e "s/=/~/" -e "s/alias/[alien]/" -e "s/'//g" < "$ALIEN" | column -t -s~;;
   edit) "$VISUAL" "$ALIEN" && exec bash;;
   a|add|create|new)
     [[ -z "$2" ]] && read -rp "name: " name
