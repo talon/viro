@@ -38,7 +38,7 @@ apply() {
   exec bash
 }
 
-mkdir -p "$(dirname "$VIRO")"
+mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
 case "$1" in
   bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
   apply) apply;;
@@ -67,4 +67,5 @@ case "$1" in
     sed -i "/export $name=/d" "$VIRO"
     exec bash
     ;;
+  *) man -l "$BIN_HOME/.manpages/viro.1"
 esac

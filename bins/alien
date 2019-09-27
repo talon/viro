@@ -52,4 +52,5 @@ case "$1" in
     sed -i "/$name=/d" "$ALIEN"
     exec bash
     ;;
+  *) man -l "$BIN_HOME/.manpages/alien.1"
 esac

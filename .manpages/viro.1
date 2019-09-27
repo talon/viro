@@ -1,0 +1,47 @@
+.TH VIRO 1 "09 Sept 2019" "1.0" "viro"
+.SH NAME
+viro \- an environment manager
+.SH SYNOPSIS
+viro
+.B apply
+.br
+viro
+.B bashrc
+.br
+viro
+.B [ls|show|view]
+.br
+viro
+.B [a|add|create|new]
+.I name
+.I value
+.br
+viro
+.B [r|rm|remove]
+.I name
+.I value
+.SH DESCRIPTION
+viro makes managing your environment simple
+.SH OPTIONS
+.TP
+.B --secret
+saves variables to a seperate secret_ENV file
+.SH ENVIRONMENT
+.TP
+.B BIN_HOME
+path where viro manages its internal files
+.SH FILES
+.TP
+.B $BIN_HOME/user/ENV
+where viro stores your public environment vaiables
+.TP
+.B $BIN_HOME/user/secret_ENV
+where viro stores your secret environment vaiables
+.SH AUTHOR
+Talon Poole (hello@talon.computer)
+.SH COPYWRITE
+Copyright \(co 2019 Talon Poole.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
