@@ -9,4 +9,5 @@ git clone https://github.com/talon/bash-cli-template ~/.bin/
 ```
 > basically just put this repo somewhere and add [bins](./bins) to your `PATH`
 > and then use `viro apply` to strap in
+
 **WARNING:** this _will_ clobber your `.bashrc`
