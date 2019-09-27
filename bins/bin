@@ -25,10 +25,10 @@ esac; done
 eval set -- "$PARAMS"
 
 case "$1" in
-  remove) rm -rf "$BIN_HOME/bins/$2";;
-  show|view) ls "$BIN_HOME/bins";;
+  r|rm|remove) rm -rf "$BIN_HOME/bins/$2";;
+  ls|show|view) ls "$BIN_HOME/bins";;
   rename) mv "$BIN_HOME/bins/$2" "$BIN_HOME/bins/$3";;
-  edit|create)
+  a|add|edit|create)
     if [ -z "$1" ]; then
       "$VISUAL" "$BIN_HOME/bins/"
     else
@@ -39,6 +39,4 @@ case "$1" in
       "$VISUAL" "$BIN_HOME/bins/$2"
     fi
     ;;
-  hack) "$VISUAL" "$BIN_HOME";;
-  *) log "that did nothing. nothing was done";;
 esac

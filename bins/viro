@@ -38,11 +38,12 @@ apply() {
   exec bash
 }
 
+mkdir -p "$(dirname "$VIRO")"
 case "$1" in
   bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
   apply) apply;;
-  show|view) sed -e 's/export/[viro]/' -e 's/=/~/' -e 's/"//g' < "$VIRO" | column -t -s~;;
-  edit) "$VISUAL" "$VIRO";;
+  ls|show|view) sed -e 's/export/[viro]/' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
+  edit) "$VISUAL" "$VIRO" && exec bash;;
   a|add|create|new)
     [[ -z "$2" ]] && read -rp "name: " name
     name="${name:-"$2"}"
@@ -56,12 +57,9 @@ case "$1" in
     exec bash
     ;;
   r|rm|remove)
-    [[ -z "$2" ]] && {
-      PS3="[$( basename "${BASH_SOURCE[0]}" )] Which one? "
-      select name in $( sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' ); do
-        break
-      done
-    }
+    [[ -z "$2" ]] && name="$(sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' | fzf)"
+    name="${name:-"$2"}"
+    [[ -z "$name" ]] && log "No ENV have been removed" && exit 1
     name="${name:-"$2"}"
     name="${name^^}" # ALL_CAPS
 

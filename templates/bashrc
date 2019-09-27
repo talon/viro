@@ -48,5 +48,5 @@ packages() {
   clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
   cp "$BIN_HOME/templates/tmux.conf" "$HOME/.tmux.conf"
   clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
-  # tmux attach || exec tmux new-session
+  tmux attach || exec tmux new-session
 }
