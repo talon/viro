@@ -26,7 +26,7 @@ eval set -- "$PARAMS"
 
 case "$1" in
   show|view)
-    cat "$BIN_HOME/user/aliases"
+    sed -e "s/alias /\[$( basename "${BASH_SOURCE[0]}" )\] /" -e "s/'//g" < "$BIN_HOME/user/aliases" | column -t -s=
     ;;
   edit)
     "$VISUAL" "$BIN_HOME/user/aliases"

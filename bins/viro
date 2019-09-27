@@ -41,7 +41,7 @@ apply() {
 case "$1" in
   bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
   apply) apply;;
-  show|view) cat "$VIRO";;
+  show|view) sed -e 's/export/[viro]/' -e 's/=/~/' -e 's/"//g' < "$VIRO" | column -t -s~;;
   edit) "$VISUAL" "$VIRO";;
   a|add|create|new)
     [[ -z "$2" ]] && read -rp "name: " name
