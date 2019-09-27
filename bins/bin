@@ -39,4 +39,5 @@ case "$1" in
       "$VISUAL" "$BIN_HOME/bins/$2"
     fi
     ;;
+  *) man -l "$BIN_HOME/.manpages/bin.1"
 esac
