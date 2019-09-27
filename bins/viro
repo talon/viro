@@ -1,9 +1,9 @@
 #!/bin/bash
-BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
-source "$BIN_HOME/src/log.sh"
+source "$VIRO_HOME/src/log.sh"
 
-VIRO="$BIN_HOME/user/ENV"
+VIRO="$VIRO_HOME/user/ENV"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
@@ -12,7 +12,7 @@ VIRO="$BIN_HOME/user/ENV"
 PARAMS=""
 while (( "$#" )); do case "$1" in
   --secret)
-    VIRO="$BIN_HOME/user/secret_ENV"
+    VIRO="$VIRO_HOME/user/secret_ENV"
     shift;;
   --)
     shift
@@ -31,16 +31,16 @@ eval set -- "$PARAMS"
 
 apply() {
   rm  "$HOME/.bashrc"
-  cp "$BIN_HOME/templates/bashrc" "$HOME/.bashrc"
-  sed -i '/BIN_HOME=/d' "$HOME/.bashrc"
-  sed -i "1i BIN_HOME=\"$BIN_HOME\"" "$HOME/.bashrc"
+  cp "$VIRO_HOME/templates/bashrc" "$HOME/.bashrc"
+  sed -i '/VIRO_HOME=/d' "$HOME/.bashrc"
+  sed -i "1i VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
   log "applied"
   exec bash
 }
 
 mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
 case "$1" in
-  bashrc) "$VISUAL" "$BIN_HOME/templates/bashrc" && apply;;
+  bashrc) "$VISUAL" "$VIRO_HOME/templates/bashrc" && apply;;
   apply) apply;;
   ls|show|view) sed -e 's/export/[viro]/' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
   edit) "$VISUAL" "$VIRO" && exec bash;;
@@ -67,5 +67,5 @@ case "$1" in
     sed -i "/export $name=/d" "$VIRO"
     exec bash
     ;;
-  *) man -l "$BIN_HOME/.manpages/viro.1"
+  *) man -l "$VIRO_HOME/.manpages/viro.1"
 esac

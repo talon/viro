@@ -1,17 +1,17 @@
 #!/bin/bash
-BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
-source "$BIN_HOME/src/log.sh"
+source "$VIRO_HOME/src/log.sh"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
 # =====================================================================================================================
 
-ALIEN="$BIN_HOME/user/aliases"
+ALIEN="$VIRO_HOME/user/aliases"
 
 PARAMS=""
 while (( "$#" )); do case "$1" in
-  --secret) ALIEN="$BIN_HOME/user/secret_aliases" && shift;;
+  --secret) ALIEN="$VIRO_HOME/user/secret_aliases" && shift;;
   --)
     shift
     break
@@ -52,5 +52,5 @@ case "$1" in
     sed -i "/$name=/d" "$ALIEN"
     exec bash
     ;;
-  *) man -l "$BIN_HOME/.manpages/alien.1"
+  *) man -l "$VIRO_HOME/.manpages/alien.1"
 esac

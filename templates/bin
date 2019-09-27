@@ -1,7 +1,7 @@
 #!/bin/bash
-BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
-source "$BIN_HOME/src/log.sh"
+source "$VIRO_HOME/src/log.sh"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`

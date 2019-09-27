@@ -1,7 +1,7 @@
 #!/bin/bash
-BIN_HOME="${BIN_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
 
-source "$BIN_HOME/src/log.sh"
+source "$VIRO_HOME/src/log.sh"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
@@ -25,19 +25,19 @@ esac; done
 eval set -- "$PARAMS"
 
 case "$1" in
-  r|rm|remove) rm -rf "$BIN_HOME/bins/$2";;
-  ls|show|view) ls "$BIN_HOME/bins";;
-  rename) mv "$BIN_HOME/bins/$2" "$BIN_HOME/bins/$3";;
+  r|rm|remove) rm -rf "$VIRO_HOME/bins/$2";;
+  ls|show|view) ls "$VIRO_HOME/bins";;
+  rename) mv "$VIRO_HOME/bins/$2" "$VIRO_HOME/bins/$3";;
   a|add|edit|create)
     if [ -z "$1" ]; then
-      "$VISUAL" "$BIN_HOME/bins/"
+      "$VISUAL" "$VIRO_HOME/bins/"
     else
-      [ -x "$BIN_HOME/bins/$2" ] || {
-        cp "$BIN_HOME/templates/bin" "$BIN_HOME/bins/$2"
-        chmod +x "$BIN_HOME/bins/$2"
+      [ -x "$VIRO_HOME/bins/$2" ] || {
+        cp "$VIRO_HOME/templates/bin" "$VIRO_HOME/bins/$2"
+        chmod +x "$VIRO_HOME/bins/$2"
       }
-      "$VISUAL" "$BIN_HOME/bins/$2"
+      "$VISUAL" "$VIRO_HOME/bins/$2"
     fi
     ;;
-  *) man -l "$BIN_HOME/.manpages/bin.1"
+  *) man -l "$VIRO_HOME/.manpages/bin.1"
 esac
