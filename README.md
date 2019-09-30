@@ -4,7 +4,7 @@
 # Install
 
 ```
-git clone https://github.com/talon/bash-cli-template ~/.bin/
+git clone https://github.com/talon/viro ~/.bin/
 echo "PATH=PATH:$HOME/.bin/bins" >> ~/.bashrc
 ```
 > basically just put this repo somewhere and add [bins](./bins)  to your `PATH`
