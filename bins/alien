@@ -20,10 +20,11 @@ eval set -- "$PARAMS"
 mkdir -p "$(dirname "$ALIEN")" && touch "$ALIEN"
 case "$1" in
   ls) sed -e "s/=/~/" -e "s/alias //" -e "s/'//g" < "$ALIEN" | column -t -s~;;
-  create)
+  add)
     name="${2:-"$(prompt "name:")"}"
-    cmd="${3:-"$(prompt "command:")"}"
     cmd="${cmd:-"${@:3}"}"
+    echo "$cmd"
+    cmd="${cmd:-"$(prompt "command:")"}"
     sed -i "/$name=/d" "$ALIEN"
     echo "alias $name=\"$cmd\"" >> "$ALIEN"
     log "added: $(grep "alias $name" "$ALIEN")"

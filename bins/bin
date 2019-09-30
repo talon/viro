@@ -9,7 +9,7 @@ BINS="$VIRO_HOME/user/bins"
 PARAMS=""
 while (( "$#" )); do case "$1" in
   -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
-  --viro) BINS="$VIRO_HOME/bins" && shift;;
+  --core) BINS="$VIRO_HOME/bins" && shift;;
 
   --) shift && break;;
   -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;

@@ -41,7 +41,7 @@ case "$1" in
   apply) apply;;
   ls) sed -e 's/export //' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
   edit) "$VISUAL" "$VIRO" && refresh;;
-  create)
+  add)
     name="${2:-"$(prompt "name:")"}"
     name="${name^^}" # ALL_CAPS
     value="${3:-"$(prompt "value:")"}"
