@@ -3,6 +3,7 @@ FILENAME="${FILENAME:-"util"}"
 
 log() { echo "[$FILENAME]" "$@"; }
 prompt() { read -rp "[$FILENAME] $1 " value; echo "$value"; }
+yorn() { read -n 1 -rp "[$FILENAME] $1 (y/n) " value; echo "$value"; }
 choose() {
   if [[ -n "$(command -v fzf)" ]]; then
     fzf

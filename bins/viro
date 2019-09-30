@@ -23,10 +23,17 @@ refresh() {
 }
 
 apply() {
-  rm  "$HOME/.bashrc"
-  cp "$VIRO_HOME/templates/bashrc" "$HOME/.bashrc"
-  sed -i -e '/VIRO_HOME=/d' "$HOME/.bashrc" -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
-  refresh
+  local safe="$(grep -q "VIRO_HOME" "$HOME/.bashrc" && echo "y")"
+  safe="${safe:-"$(yorn "This will completely replace your .bashrc file. Continue?")"}"
+  if [[ "$safe" =~ [Yy] ]]; then
+    rm  "$HOME/.bashrc"
+    cp "$VIRO_HOME/templates/bashrc" "$HOME/.bashrc"
+    sed -i -e '/VIRO_HOME=/d' "$HOME/.bashrc" -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    refresh
+  else
+    log "Maybe make a backup first?"
+    log "try: mv $HOME/.bashrc $HOME/.bashrc.bak"
+  fi
 }
 
 [[ -e "$VIRO" ]] || mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
