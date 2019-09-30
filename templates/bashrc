@@ -9,19 +9,6 @@ export MANPATH="$VIRO_HOME/man"
 source "$VIRO_HOME/src/host/wsl-ubuntu.sh"
 source "$VIRO_HOME/src/utils.sh"
 
-# Flags
-# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
-# =====================================================================================================================
-PARAMS=""
-while (( "$#" )); do case "$1" in
-  --reload) RELOAD="yes" && shift;;
-
-  --) shift && break;;
-  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
-  *) PARAMS="$PARAMS $1" && shift;;
-esac; done
-eval set -- "$PARAMS"
-
 packages() {
   log "ensuring packages are available"
   ensure curl
