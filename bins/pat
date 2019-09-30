@@ -1,0 +1,34 @@
+#!/bin/bash
+source "$VIRO_HOME/src/utils.sh"
+
+PAT="$VIRO_HOME/user/PATH"
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
+esac; done
+eval set -- "$PARAMS"
+
+case "$1" in
+  ls) sed -e 's/PATH="$PATH//' -e 's/"//g' < "$PAT" | column -t -s:;;
+  create)
+    directory="${2:-"$(prompt "directory:")"}"
+    sed -i "/$(echo "$directory" | sed 's/\//\\\//g')/d" "$PAT"
+    echo "PATH=\"\$PATH:$directory\"" >> "$PAT"
+    log "added: $directory"
+    viro refresh
+    ;;
+  edit) "$VISUAL" "$PAT" && viro refresh;;
+  rm)
+    directory="${2:-"$(pat ls | choose)"}"
+    [[ -z "$directory" ]] && log "No paths have been removed" && exit 1
+    log "removed: $directory"
+    sed -i "/$(echo "$directory" | sed 's/\//\\\//g')/d" "$PAT"
+    viro refresh
+esac
