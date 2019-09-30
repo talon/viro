@@ -63,4 +63,5 @@ case "$1" in
     ;;
   bashrc) "$VISUAL" "$VIRO_HOME/templates/bashrc" && apply;;
   refresh) refresh;;
+  has) viro ls | grep -wq "${2^^}";;
 esac

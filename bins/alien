@@ -37,4 +37,6 @@ case "$1" in
     log "removed: $(grep "alias $name" "$ALIEN")"
     sed -i "/$name=/d" "$ALIEN"
     viro refresh
+    ;;
+  has) alien ls | grep -wq "$2";;
 esac
