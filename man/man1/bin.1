@@ -3,14 +3,18 @@
 bin \- a bash executable manager
 .SH SYNOPSIS
 bin
-.B [ls|show|view]
+.B ls
 .br
 bin
-.B [a|add|create|new|edit]
+.B create
 .I name
 .br
 bin
-.B [r|rm|remove]
+.B edit
+.I name
+.br
+bin
+.B rm
 .I name
 .br
 bin
@@ -19,13 +23,13 @@ bin
 .I new-name
 .SH DESCRIPTION
 bin makes managing executable bash files simple
-.SH ENVIRONMENT
+.SH OPTIONS
 .TP
-.B VIRO_HOME
-path where bin manages its internal files
+.B --viro
+switch to operate on the core bins in the $VIRO_HOME directory. Use with caution! But feel free to contribute :)
 .SH FILES
 .TP
-.B $VIRO_HOME/bins
+.B $VIRO_HOME/user/bins
 where bin stores your executable shell files
 .SH AUTHOR
 Talon Poole (hello@talon.computer)

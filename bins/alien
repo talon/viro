@@ -1,56 +1,39 @@
 #!/bin/bash
-VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+source "$VIRO_HOME/src/utils.sh"
 
-source "$VIRO_HOME/src/log.sh"
+ALIEN="$VIRO_HOME/user/aliases"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
 # =====================================================================================================================
-
-ALIEN="$VIRO_HOME/user/aliases"
-
 PARAMS=""
 while (( "$#" )); do case "$1" in
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
   --secret) ALIEN="$VIRO_HOME/user/secret_aliases" && shift;;
-  --)
-    shift
-    break
-    ;;
-  -*|--*)
-    log "Error: Unsupported flag $1" >&2
-    exit 1
-    ;;
-  *)
-    PARAMS="$PARAMS $1"
-    shift
-    ;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
 esac; done
 eval set -- "$PARAMS"
 
 mkdir -p "$(dirname "$ALIEN")" && touch "$ALIEN"
 case "$1" in
-  ls|show|view) sed -e "s/=/~/" -e "s/alias/[alien]/" -e "s/'//g" < "$ALIEN" | column -t -s~;;
-  edit) "$VISUAL" "$ALIEN" && exec bash;;
-  a|add|create|new)
-    [[ -z "$2" ]] && read -rp "name: " name
-    name="${name:-"$2"}"
-    [[ -z "$3" ]] && read -rp "command: " cmd
+  ls) sed -e "s/=/~/" -e "s/alias //" -e "s/'//g" < "$ALIEN" | column -t -s~;;
+  create)
+    name="${2:-"$(prompt "name:")"}"
+    cmd="${3:-"$(prompt "command:")"}"
     cmd="${cmd:-"${@:3}"}"
-
     sed -i "/$name=/d" "$ALIEN"
-    echo "alias $name='$cmd'" >> "$ALIEN"
+    echo "alias $name=\"$cmd\"" >> "$ALIEN"
     log "added: $(grep "alias $name" "$ALIEN")"
-    exec bash
+    viro refresh
     ;;
-  r|rm|remove)
-    [[ -z "$2" ]] && name="$(sed -e 's/=./ /' < "$ALIEN" | awk '{print $2}' | fzf)"
-    name="${name:-"$2"}"
+  edit) "$VISUAL" "$ALIEN" && viro refresh;;
+  rm)
+    name="${2:-"$(sed -e 's/=./ /' < "$ALIEN" | awk '{print $2}' | choose)"}"
     [[ -z "$name" ]] && log "No aliases have been removed" && exit 1
-    name="${name:-"$2"}"
-
     log "removed: $(grep "alias $name" "$ALIEN")"
     sed -i "/$name=/d" "$ALIEN"
-    exec bash
-    ;;
-  *) man -l "$VIRO_HOME/.manpages/alien.1"
+    viro refresh
 esac

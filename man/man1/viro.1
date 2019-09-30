@@ -6,20 +6,24 @@ viro
 .B apply
 .br
 viro
+.B ls
+.br
+viro
+.B create
+.I name
+.I value
+.br
+viro
+.B rm
+.I name
+.I value
+.br
+viro
 .B bashrc
 .br
 viro
-.B [ls|show|view]
+.B refresh
 .br
-viro
-.B [a|add|create|new]
-.I name
-.I value
-.br
-viro
-.B [r|rm|remove]
-.I name
-.I value
 .SH DESCRIPTION
 viro makes managing your environment simple
 .SH OPTIONS
@@ -33,10 +37,10 @@ path where viro manages its internal files
 .SH FILES
 .TP
 .B $VIRO_HOME/user/ENV
-where viro stores your public environment vaiables
+where viro stores your public environment variables
 .TP
 .B $VIRO_HOME/user/secret_ENV
-where viro stores your secret environment vaiables
+where viro stores your secret environment variables
 .TP
 .B $VIRO_HOME/templates
 where viro keeps configuration files (bashrc, init.vim, tmux.conf, etc...)

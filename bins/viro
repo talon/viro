@@ -1,71 +1,59 @@
 #!/bin/bash
-VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
-
-source "$VIRO_HOME/src/log.sh"
+source "$VIRO_HOME/src/utils.sh"
 
 VIRO="$VIRO_HOME/user/ENV"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
 # =====================================================================================================================
-
 PARAMS=""
 while (( "$#" )); do case "$1" in
-  --secret)
-    VIRO="$VIRO_HOME/user/secret_ENV"
-    shift;;
-  --)
-    shift
-    break
-    ;;
-  -*|--*)
-    log "Error: Unsupported flag $1" >&2
-    exit 1
-    ;;
-  *)
-    PARAMS="$PARAMS $1"
-    shift
-    ;;
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+  --secret) VIRO="$VIRO_HOME/user/secret_ENV" && shift;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
 esac; done
 eval set -- "$PARAMS"
+
+refresh() {
+  log "applying..."
+  RELOAD="yes" exec bash;
+}
 
 apply() {
   rm  "$HOME/.bashrc"
   cp "$VIRO_HOME/templates/bashrc" "$HOME/.bashrc"
-  sed -i '/VIRO_HOME=/d' "$HOME/.bashrc"
-  sed -i "1i VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
-  log "applied"
-  exec bash
+  sed -i -e '/VIRO_HOME=/d' "$HOME/.bashrc" -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+  refresh
 }
 
-mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
+[[ -e "$VIRO" ]] || mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
 case "$1" in
-  bashrc) "$VISUAL" "$VIRO_HOME/templates/bashrc" && apply;;
   apply) apply;;
-  ls|show|view) sed -e 's/export/[viro]/' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
-  edit) "$VISUAL" "$VIRO" && exec bash;;
-  a|add|create|new)
-    [[ -z "$2" ]] && read -rp "name: " name
-    name="${name:-"$2"}"
+  ls) sed -e 's/export //' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
+  edit) "$VISUAL" "$VIRO" && refresh;;
+  create)
+    name="${2:-"$(prompt "name:")"}"
     name="${name^^}" # ALL_CAPS
-    [[ -z "$3" ]] && read -rp "value: " value
+    value="${3:-"$(prompt "value:")"}"
     value="${value:-"${@:3}"}"
-
+    [[ -z "$name" ]]  && log "name empty. No ENV created." && exit 1
+    [[ -z "$value" ]] && log "value empty. No ENV created." && exit 1
     sed -i "/export $name=/d" "$VIRO"
-    echo "export $name='$value'" >> "$VIRO"
+    echo "export $name=\"$value\"" >> "$VIRO"
     log "added: $(grep "export $name" "$VIRO")"
-    exec bash
+    refresh
     ;;
-  r|rm|remove)
-    [[ -z "$2" ]] && name="$(sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' | fzf)"
-    name="${name:-"$2"}"
+  rm)
+    name="${2:-"$(sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' | choose)"}"
     [[ -z "$name" ]] && log "No ENV have been removed" && exit 1
-    name="${name:-"$2"}"
     name="${name^^}" # ALL_CAPS
-
-    log "removed: $( grep "export $name" "$VIRO" )"
+    log "removed: $(grep "export $name" "$VIRO")"
     sed -i "/export $name=/d" "$VIRO"
-    exec bash
+    refresh
     ;;
-  *) man -l "$VIRO_HOME/.manpages/viro.1"
+  bashrc) "$VISUAL" "$VIRO_HOME/templates/bashrc" && apply;;
+  refresh) refresh;;
 esac

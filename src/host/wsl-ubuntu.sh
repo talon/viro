@@ -1,4 +1,4 @@
-source "$VIRO_HOME/src/log.sh"
+source "$VIRO_HOME/src/utils.sh"
 
 BROWSER="/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"
 CLIPBOARD="clip.exe"

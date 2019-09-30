@@ -1,43 +1,60 @@
 #!/bin/bash
-VIRO_HOME="${VIRO_HOME:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )" 2>&1 && cd ../ 2>&1 && pwd)"}"
+source "$VIRO_HOME/src/utils.sh"
 
-source "$VIRO_HOME/src/log.sh"
+BINS="$VIRO_HOME/user/bins"
 
 # Flags
 # NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
 # =====================================================================================================================
-
 PARAMS=""
 while (( "$#" )); do case "$1" in
-  --)
-    shift
-    break
-    ;;
-  -*|--*)
-    log "Error: Unsupported flag $1" >&2
-    exit 1
-    ;;
-  *)
-    PARAMS="$PARAMS $1"
-    shift
-    ;;
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+  --viro) BINS="$VIRO_HOME/bins" && shift;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
 esac; done
 eval set -- "$PARAMS"
 
+[[ -e "$BINS" ]] || mkdir -p "$BINS"
 case "$1" in
-  r|rm|remove) rm -rf "$VIRO_HOME/bins/$2";;
-  ls|show|view) ls "$VIRO_HOME/bins";;
-  rename) mv "$VIRO_HOME/bins/$2" "$VIRO_HOME/bins/$3";;
-  a|add|edit|create)
-    if [ -z "$1" ]; then
-      "$VISUAL" "$VIRO_HOME/bins/"
-    else
-      [ -x "$VIRO_HOME/bins/$2" ] || {
-        cp "$VIRO_HOME/templates/bin" "$VIRO_HOME/bins/$2"
-        chmod +x "$VIRO_HOME/bins/$2"
-      }
-      "$VISUAL" "$VIRO_HOME/bins/$2"
-    fi
+  ls) ls "$BINS";;
+  create)
+    name="${2:-"$(prompt "name:")"}"
+    [[ -z "$name" ]] && log "No bins were added" && exit 1
+    [[ -f "$BINS/$name" ]] && {
+      log "$name already exists"
+      log "try: bin edit $name"
+      exit 1
+    }
+    cp "$VIRO_HOME/templates/bin" "$BINS/$name"
+    [[ -x "$BINS/$name" ]] || chmod +x "$BINS/$name"
+    "$VISUAL" "$BINS/$name"
+    log "$name was created"
     ;;
-  *) man -l "$VIRO_HOME/.manpages/bin.1"
+  edit)
+    name=${2:-"$(ls "$BINS" | choose)"}
+    [[ -z "$name" ]] && log "Nothing to edit" && exit 1
+    [[ -f "$BINS/$name" ]] || {
+      log "$name doesn't exist"
+      log "try: bin create $name"
+      exit 1
+    }
+    [[ -x "$BINS/$name" ]] || chmod +x "$BINS/$name"
+    "$VISUAL" "$BINS/$name"
+    log "$name has been updated"
+    ;;
+  rm)
+    name=${2:-"$(ls "$BINS" | choose)"}
+    [[ -z "$name" ]] && log "No bins were removed" && exit 1
+    rm -rf "${BINS:?}/$name"
+    log "$name was removed"
+    ;;
+  rename)
+    old=${2:-"$(ls "$BINS" | choose)"}
+    new="${3:-"$(prompt "new name:")"}"
+    mv "$BINS/$old" "$BINS/$new"
+    log "renamed $old to $new"
+    ;;
 esac

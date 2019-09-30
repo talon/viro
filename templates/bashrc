@@ -1,10 +1,26 @@
-VIRO_HOME="/c/Users/tpoole/Documents/GitHub/bin"
+export VIRO_HOME="/c/Users/tpoole/Documents/GitHub/bin"
+export MANPATH="$VIRO_HOME/man"
+[[ -f "$VIRO_HOME/user/PATH" ]] && source "$VIRO_HOME/user/PATH";
 [[ -f "$VIRO_HOME/user/ENV" ]] && source "$VIRO_HOME/user/ENV";
 [[ -f "$VIRO_HOME/user/secret_ENV" ]] && source "$VIRO_HOME/user/secret_ENV";
 [[ -f "$VIRO_HOME/user/aliases" ]] && source "$VIRO_HOME/user/aliases";
+[[ -f "$VIRO_HOME/user/secret_aliases" ]] && source "$VIRO_HOME/user/secret_aliases";
 
 source "$VIRO_HOME/src/host/wsl-ubuntu.sh"
-source "$VIRO_HOME/src/log.sh"
+source "$VIRO_HOME/src/utils.sh"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  --reload) RELOAD="yes" && shift;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
+esac; done
+eval set -- "$PARAMS"
 
 packages() {
   log "ensuring packages are available"
@@ -50,3 +66,4 @@ packages() {
   clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
   tmux attach || exec tmux new-session
 }
+[[ -n "$RELOAD" ]] && log "ready."
