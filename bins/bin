@@ -31,7 +31,6 @@ case "$1" in
     cp "$VIRO_HOME/templates/bin" "$BINS/$name"
     [[ -x "$BINS/$name" ]] || chmod +x "$BINS/$name"
     "$VISUAL" "$BINS/$name"
-    log "$name was created"
     ;;
   edit)
     name=${2:-"$(ls "$BINS" | choose)"}
@@ -43,7 +42,6 @@ case "$1" in
     }
     [[ -x "$BINS/$name" ]] || chmod +x "$BINS/$name"
     "$VISUAL" "$BINS/$name"
-    log "$name has been updated"
     ;;
   rm)
     name=${2:-"$(ls "$BINS" | choose)"}

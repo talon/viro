@@ -44,7 +44,7 @@ case "$1" in
   add)
     name="${2:-"$(prompt "name:")"}"
     name="${name^^}" # ALL_CAPS
-    value="${3:-"$(prompt "value:")"}"
+    value="${3:-"$(prompt "viro add $name:")"}"
     value="${value:-"${@:3}"}"
     [[ -z "$name" ]]  && log "name empty. No ENV created." && exit 1
     [[ -z "$value" ]] && log "value empty. No ENV created." && exit 1

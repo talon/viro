@@ -24,7 +24,7 @@ case "$1" in
     name="${2:-"$(prompt "name:")"}"
     cmd="${cmd:-"${@:3}"}"
     echo "$cmd"
-    cmd="${cmd:-"$(prompt "command:")"}"
+    cmd="${cmd:-"$(prompt "alien add $name:")"}"
     sed -i "/$name=/d" "$ALIEN"
     echo "alias $name=\"$cmd\"" >> "$ALIEN"
     log "added: $(grep "alias $name" "$ALIEN")"

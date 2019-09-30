@@ -18,7 +18,7 @@ eval set -- "$PARAMS"
 case "$1" in
   ls) sed -e 's/PATH="$PATH//' -e 's/"//g' < "$PAT" | column -t -s:;;
   add)
-    directory="${2:-"$(prompt "directory:")"}"
+    directory="${2:-"$(prompt "pat add:")"}"
     sed -i "/$(echo "$directory" | sed 's/\//\\\//g')/d" "$PAT"
     echo "PATH=\"\$PATH:$directory\"" >> "$PAT"
     log "added: $directory"
