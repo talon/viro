@@ -6,31 +6,38 @@ viro
 .B install
 .br
 viro
+.B refresh
+.br
+viro
 .B boot
 .br
 viro
-.B ls
+.B [env|alias|path]
+ls
 .br
 viro
-.B add
+.B [env|alias|path]
+edit
+.br
+viro
+.B [env|alias|path]
+add
 .I name
 .I value
 .br
 viro
-.B rm
+.B [env|alias|path]
+rm
 .I name
 .I value
 .br
 viro
-.B refresh
+.B [env|alias|path]
+has
+.I name
 .br
 .SH DESCRIPTION
 viro makes managing your environment simple
-.SH OPTIONS
-.TP
-.B --secret
-.RS
-saves variables to a seperate secret_ENV file
 .SH ENVIRONMENT
 .TP
 .B VIRO_HOME
@@ -38,13 +45,19 @@ path where viro manages its internal files
 .SH FILES
 .TP
 .B $VIRO_HOME/user/ENV
-where viro stores your public environment variables
+your environment variables
 .TP
-.B $VIRO_HOME/user/secret_ENV
-where viro stores your secret environment variables
+.B $VIRO_HOME/user/aliases
+your aliases
 .TP
-.B $VIRO_HOME/templates
-where viro keeps configuration files (bashrc, init.vim, tmux.conf, etc...)
+.B $VIRO_HOME/user/PATH
+your PATH
+.TP
+.B $VIRO_HOME/user/boot.sh
+for startup script stuff
+.TP
+.B $VIRO_HOME/user/bins
+the folder with any bins you've created
 .SH AUTHOR
 Talon Poole (hello@talon.computer)
 .SH COPYWRITE
