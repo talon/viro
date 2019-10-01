@@ -18,17 +18,20 @@ esac; done
 eval set -- "$PARAMS"
 
 refresh() {
-  log "applying..."
+  log "refreshing"
   RELOAD="yes" exec bash;
 }
 
-apply() {
-  local safe="$(grep -q "VIRO_HOME" "$HOME/.bashrc" && echo "y")"
-  safe="${safe:-"$(yorn "Continue?")"}"
-  if [[ "$safe" =~ [Yy] ]]; then
+install() {
+  log "two lines will be added to your .bashrc file:"
+  log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
+  log "   at the bottom: viro core will be sourced"
+  log "this operation is usually painless :)"
+  if [[ "$(yorn "Continue?")" =~ [Yy] ]]; then
+    echo ""
+    log "you've got it!"
     sed -i -e '/VIRO_HOME/d' -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
     echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
-
     refresh
   else
     log "Maybe make a backup first?"
@@ -38,7 +41,8 @@ apply() {
 
 [[ -e "$VIRO" ]] || mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
 case "$1" in
-  apply) apply;;
+  install) install;;
+  boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && refresh;;
   ls) sed -e 's/export //' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
   edit) "$VISUAL" "$VIRO" && refresh;;
   add)
@@ -61,7 +65,6 @@ case "$1" in
     sed -i "/export $name=/d" "$VIRO"
     refresh
     ;;
-  boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && apply;;
   refresh) refresh;;
   has) viro ls | grep -wq "${2^^}";;
 esac
