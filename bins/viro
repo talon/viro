@@ -24,11 +24,11 @@ refresh() {
 
 apply() {
   local safe="$(grep -q "VIRO_HOME" "$HOME/.bashrc" && echo "y")"
-  safe="${safe:-"$(yorn "This will completely replace your .bashrc file. Continue?")"}"
+  safe="${safe:-"$(yorn "Continue?")"}"
   if [[ "$safe" =~ [Yy] ]]; then
-    rm  "$HOME/.bashrc"
-    cp "$VIRO_HOME/templates/bashrc" "$HOME/.bashrc"
-    sed -i -e '/VIRO_HOME=/d' "$HOME/.bashrc" -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    sed -i -e '/VIRO_HOME/d' -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
+
     refresh
   else
     log "Maybe make a backup first?"
@@ -61,7 +61,7 @@ case "$1" in
     sed -i "/export $name=/d" "$VIRO"
     refresh
     ;;
-  bashrc) "$VISUAL" "$VIRO_HOME/templates/bashrc" && apply;;
+  boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && apply;;
   refresh) refresh;;
   has) viro ls | grep -wq "${2^^}";;
 esac
