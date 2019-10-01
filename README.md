@@ -5,6 +5,6 @@
 
 ```sh
 git clone https://github.com/talon/viro ~/.viro/
-~/.viro/bins/viro install
+~/.viro/viro install
 ```
-> put this repo somewhere and then use [`bins/viro`](./bins/viro) `install` to strap in
+> put this repo somewhere and then use [`./viro`](./viro) `install` to strap in
