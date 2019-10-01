@@ -1,23 +1,12 @@
-# bin
-> ⌨ a command line interface for creating command line interfaces (with Bash)
+# viro
+> an environment manager
 
 # Install
 
+```sh
+git clone https://github.com/talon/viro ~/.viro/
+~/.viro/bins/viro install
 ```
-git clone https://github.com/talon/bash-cli-template ~/.bin/
-echo "PATH=PATH:$HOME/.bin/bins" >> ~/.bashrc
-```
-> basically just put this repo somewhere and add [bins](./bins)  to your `PATH`
+> basically just put this repo somewhere and then use `[bins/viro](./bins/viro) install` to strap in
 
-# Usage
-
-```
-bin create [name] # create (or edit) [name] with $VISUAL
-bin remove [name] # remove bin
-bin show # show all bins
-bin src # create a .sh file that other bins can `use`
-```
-
-# Example
-
-[![asciicast](https://asciinema.org/a/269730.svg)](https://asciinema.org/a/269730)
+**WARNING:** this _will_ clobber your `.bashrc`

@@ -1,0 +1,47 @@
+#!/bin/bash
+source "$VIRO_HOME/src/utils.sh"
+
+EDMAN="$VIRO_HOME/man"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
+esac; done
+eval set -- "$PARAMS"
+
+synopsis() {
+  local base="$1"
+  local synops=".SH SYNOPSIS\n"
+  while read -rp "[$base] command: " command; do
+    [[ -z "$command" ]] && break
+    synops="$synops.SY $base\n.B $command\n"
+    while read -rp "[$base $command] argument: " argument; do
+      [[ -z "$argument" ]] && synops="$synops.YS\n" && break
+      read -rp "[$base $command] is \`$argument\` optional?: (y/N) " optional
+      synops="$synops$(if [[ "$optional" =~ [Yy|yes] ]]; then echo ".I "; else echo ""; fi)$argument\n"
+    done
+  done
+  printf "$synops"
+}
+
+case "$1" in
+  create)
+    synopsis "$2"
+    # name="$2"
+    # [[ -z "$name" ]] && read -rp "name: " name
+    # read -rp "tagline: " tagline
+    ;;
+  edit)
+    name=${2:-"$(ls "$EDMAN/man1" | choose | sed 's/\.[^.]*$//')"}
+    [[ -z "$name" ]] && log "Nothing to edit" && exit 1
+    "$VISUAL" "$EDMAN/man1/$name.1"
+    ;;
+esac

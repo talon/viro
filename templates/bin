@@ -1,0 +1,23 @@
+#!/bin/bash
+source "$VIRO_HOME/src/utils.sh"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
+esac; done
+eval set -- "$PARAMS"
+
+case "$1" in
+  *)
+    log "this bin has no functionality yet"
+    log
+    log "    bin edit $( basename ${BASH_SOURCE[0]} )"
+    ;;
+esac

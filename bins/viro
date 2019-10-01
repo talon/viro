@@ -1,0 +1,70 @@
+#!/bin/bash
+source "$VIRO_HOME/src/utils.sh"
+
+VIRO="$VIRO_HOME/user/ENV"
+
+# Flags
+# NOTE: if a flag takes an argument you need to `shift 2`, otherwise just `shift`
+# =====================================================================================================================
+PARAMS=""
+while (( "$#" )); do case "$1" in
+  -h|--help) man "${BASH_SOURCE[0]}" && exit 0;;
+  --secret) VIRO="$VIRO_HOME/user/secret_ENV" && shift;;
+
+  --) shift && break;;
+  -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
+  *) PARAMS="$PARAMS $1" && shift;;
+esac; done
+eval set -- "$PARAMS"
+
+refresh() {
+  log "refreshing"
+  RELOAD="yes" exec bash;
+}
+
+install() {
+  log "two lines will be added to your .bashrc file:"
+  log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
+  log "   at the bottom: viro core will be sourced"
+  log "this operation is usually painless :)"
+  if [[ "$(yorn "Continue?")" =~ [Yy] ]]; then
+    echo ""
+    log "you've got it!"
+    sed -i -e '/VIRO_HOME/d' -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
+    refresh
+  else
+    log "Maybe make a backup first?"
+    log "try: mv $HOME/.bashrc $HOME/.bashrc.bak"
+  fi
+}
+
+[[ -e "$VIRO" ]] || mkdir -p "$(dirname "$VIRO")" && touch "$VIRO"
+case "$1" in
+  install) install;;
+  boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && refresh;;
+  ls) sed -e 's/export //' -e 's/=/~/' -e "s/'//g" < "$VIRO" | column -t -s~;;
+  edit) "$VISUAL" "$VIRO" && refresh;;
+  add)
+    name="${2:-"$(prompt "name:")"}"
+    name="${name^^}" # ALL_CAPS
+    value="${3:-"$(prompt "viro add $name:")"}"
+    value="${value:-"${@:3}"}"
+    [[ -z "$name" ]]  && log "name empty. No ENV created." && exit 1
+    [[ -z "$value" ]] && log "value empty. No ENV created." && exit 1
+    sed -i "/export $name=/d" "$VIRO"
+    echo "export $name=\"$value\"" >> "$VIRO"
+    log "added: $(grep "export $name" "$VIRO")"
+    refresh
+    ;;
+  rm)
+    name="${2:-"$(sed -e 's/=./ /' < "$VIRO" | awk '{print $2}' | choose)"}"
+    [[ -z "$name" ]] && log "No ENV have been removed" && exit 1
+    name="${name^^}" # ALL_CAPS
+    log "removed: $(grep "export $name" "$VIRO")"
+    sed -i "/export $name=/d" "$VIRO"
+    refresh
+    ;;
+  refresh) refresh;;
+  has) viro ls | grep -wq "${2^^}";;
+esac
