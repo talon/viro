@@ -1,6 +1,6 @@
 #!/bin/bash
+export VIRO_HOME="${VIRO_HOME:-"$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../ >/dev/null 2>&1 && pwd)"}"
 source "$VIRO_HOME/src/utils.sh"
-
 VIRO="$VIRO_HOME/user/ENV"
 
 # Flags
