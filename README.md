@@ -19,30 +19,38 @@ viro - an environment manager
 
 viro
 **install**
+
 viro
 **refresh**
+
 viro
 **boot**
+
 viro
 **[env|alias|path]**
 ls
+
 viro
 **[env|alias|path]**
 edit
+
 viro
 **[env|alias|path]**
 add
 _name_
 _value_
+
 viro
 **[env|alias|path]**
 rm
 _name_
 _value_
+
 viro
 **[env|alias|path]**
 has
 _name_
+
 
 # Description
 
@@ -76,5 +84,6 @@ Talon Poole (hello@talon.computer)
 
 Copyright © 2019 Talon Poole.
 License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;.
+
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
