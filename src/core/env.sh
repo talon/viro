@@ -14,10 +14,9 @@ case "$1" in
       [[ -e "$(dirname "$VIRO_ENV")" ]] && mkdir -p "$(dirname "$VIRO_ENV")"
       [[ -f "$VIRO_ENV" ]] && sed -i "/export $name=/d" "$VIRO_ENV"
       echo "export $name=\"$value\"" >> "$VIRO_ENV"
-      log "added: $(grep "export $name" "$VIRO_ENV")"
-      refresh
+      echo "$value"
     else
-      log "$name $(bold has not) been updated" && exit 1
+      exit 1
     fi
     ;;
   edit) "$VISUAL" "$VIRO_ENV" && refresh;;
@@ -28,7 +27,6 @@ case "$1" in
     if yorn "Are you sure you want to delete $name?"; then
       log "removed: $(grep "export $name" "$VIRO_ENV")"
       sed -i "/export $name=/d" "$VIRO_ENV"
-      refresh
     else
       log "$name $(bold has not) been removed"
     fi

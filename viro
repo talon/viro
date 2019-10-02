@@ -5,6 +5,7 @@ source "$VIRO_HOME/src/utils.sh"
 PARAMS=""
 while (( "$#" )); do case "$1" in
   -h|--help) man viro && exit 0;;
+  --yes|-y) YES="yes" && shift;;
 
   --) shift && break;;
   -*|--*) log "Error: Unsupported flag $1" >&2 && exit 1;;
@@ -18,13 +19,16 @@ case "$1" in
   alias) "$VIRO_HOME/src/core/alias.sh" "${@:2}";;
   boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && refresh;;
   install)
-    log "two lines will be added to your .bashrc file:"
-    log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
-    log "   at the bottom: viro core will be sourced"
-    log
-    if yorn "Continue?"; then
-      sed -i -e '/VIRO_HOME/d' -e "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    [[ -n "$YES" ]] || {
+      log "two lines will be added to your .bashrc file:"
+      log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
+      log "   at the bottom: viro core will be sourced"
+      log
+    }
+    if [[ -n "$YES" ]] || yorn "Continue?"; then
+      sed -i '/VIRO_HOME/d' "$HOME/.bashrc"
       echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
+      sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
       refresh
     else
       log "Maybe make a backup first?"
