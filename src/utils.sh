@@ -12,8 +12,7 @@ yorn() {
   read -n 1 -rp "[$FILENAME] $1 (y/N) " value;
   case "$value" in
     y|Y) echo && return 0;;
-    n|N) echo && return 1;;
-    *) echo && return 1;;
+    *) return 1;;
   esac
 }
 

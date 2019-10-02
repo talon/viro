@@ -14,9 +14,9 @@ esac; done
 eval set -- "$PARAMS"
 
 case "$1" in
-  env) "$VIRO_HOME/src/core/env.sh" "${@:2}";;
+  env) YES="$YES" "$VIRO_HOME/src/core/env.sh" "${@:2}";;
   path) "$VIRO_HOME/src/core/path.sh" "${@:2}";;
-  alias) "$VIRO_HOME/src/core/alias.sh" "${@:2}";;
+  alias) YES="$YES" "$VIRO_HOME/src/core/alias.sh" "${@:2}";;
   boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && refresh;;
   install)
     [[ -n "$YES" ]] || {
