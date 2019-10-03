@@ -37,7 +37,7 @@ case "$1" in
     grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
       name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
       value="$(echo "$env" | sed "s/export .*=//")"
-      YES="y" viro env set "$name" "$value" \
+      YES="$YES" viro env set "$name" "$value" \
         && sed -i "/export $name/d" "$HOME/.bashrc"
     done
     ;;
