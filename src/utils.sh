@@ -6,31 +6,49 @@ refresh() { exec bash; }
 
 log() { echo "[$FILENAME]" "$@"; }
 
-prompt() { read -rp "[$FILENAME] $1 " value; echo "$value"; }
+prompt() {
+  read -rp "[$FILENAME] $1 " value;
+  [[ -z "$value" ]] && exit 1
+  echo "$value";
+}
 
 yorn() {
-  read -n 1 -rp "[$FILENAME] $1 (y/N) " value;
-  case "$value" in
-    y|Y) echo && return 0;;
+  answer="$2"
+  [[ -z "$answer" ]] && read -n 1 -rp "[$FILENAME] $1 (y/N) " answer;
+  case "$answer" in
+    y|Y) return 0;;
     *) return 1;;
   esac
 }
 
-choose() {
-  if [[ -n "$(command -v fzf)" ]]; then
-    fzf
-  else
-    # hack to perserve whitespace from stdin
-    local options=""
-    while read -r value; do options="\"$value\" $options"; done
-    eval set -- "$options"
-    # /hack
+sel() {
+  message="${1:-"choose:"}"
+  [[ -n "$1" ]] && shift
 
-    PS3="[$FILENAME] #? "
-    select value in "$@"; do
-      echo "$value"
-      break
-    done < /dev/tty
+  # hack to perserve whitespace from stdin
+  local options=""
+  while read -r value; do options="\"$value\" $options"; done
+  eval set -- "$options"
+  # /hack
+
+  PS3="[$FILENAME] $message "
+  select value in "$@"; do
+    [[ -z "$value" ]] && exit 1
+    echo "$value"
+    break
+  done < /dev/tty
+}
+
+choose() {
+  message="${1:-"choose:"}"
+  [[ -n "$1" ]] && shift
+
+  if [[ -n "$(command -v fzf)" ]]; then
+    value="$(fzf --reverse --tac --prompt "$message ")"
+    [[ -z "$value" ]] && exit 1
+    echo "$value"
+  else
+    sel "$@"
   fi
 }
 

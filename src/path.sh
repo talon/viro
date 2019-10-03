@@ -25,5 +25,13 @@ case "$1" in
     fi
     ;;
   has) viro path ls | grep -wq "${@:2}";;
+  import)
+    grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
+      name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
+      value="$(echo "$env" | sed "s/export .*=//")"
+      viro env add "$name" "$value" "$([[ -n "$YES" ]] && echo "--yes")" \
+        && sed -i "/export $name/d" "$HOME/.bashrc"
+    done
+    ;;
   ls|*) sed -e 's/PATH="$PATH://' -e 's/"//g' < "$VIRO_PATH";;
 esac

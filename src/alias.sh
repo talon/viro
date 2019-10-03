@@ -6,7 +6,7 @@ case "$1" in
   add)
     name="${2:-"$(prompt "add:")"}"
     [[ -z "$name" ]] && log "Name empty. No alias has been created" && exit 1
-    if ! viro alias has "$name" || [[ -n "$YES" ]] || yorn "$(bold "$name") already exists. Replace it?"; then
+    if ! viro alias has "$name" || yorn "$(bold "$name") already exists. Replace it?" "$YES"; then
       cmd="${@:3}"
       cmd="${cmd:-"$(prompt "$name should:")"}"
       [[ -f "$cmd" ]] && log "Command empty. $name $(bold has not) been created" && exit 1
@@ -21,13 +21,11 @@ case "$1" in
   edit) "$VISUAL" "$VIRO_ALIAS";;
   rm)
     names="${*:2}"
-    names="${names:-"$(sed -e 's/=./ /' < "$VIRO_ALIAS" | awk '{print $2}' | choose)"}"
+    names="${names:-"$(sed -e 's/=./ /' < "$VIRO_ALIAS" | awk '{print $2}' | choose "viro alias rm")"}"
     [[ -z "$names" ]] && log "No aliases have been removed" && exit 1
     for name in $names; do
-      if [[ -n "$YES" ]] || yorn "remove alias $(bold "$name")?"; then
+      if yorn "remove alias $(bold "$name")?" "$YES"; then
         sed -i "/$name=/d" "$VIRO_ALIAS"
-      else
-        log "$names $(bold has not) been removed"
       fi
     done
     ;;
