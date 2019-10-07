@@ -14,7 +14,7 @@ prompt() {
 
 yorn() {
   answer="$2"
-  [[ -z "$answer" ]] && read -n 1 -rp "[$FILENAME] $1 (y/N) " answer;
+  [[ -z "$answer" ]] && read -n 1 -rp "[$FILENAME] $1 (y/N) " answer && printf "\n"
   case "$answer" in
     y|Y) return 0;;
     *) return 1;;
@@ -22,7 +22,7 @@ yorn() {
 }
 
 sel() {
-  message="${1:-"choose:"}"
+  message="${1:-"[$FILENAME]:"}"
   [[ -n "$1" ]] && shift
 
   # hack to perserve whitespace from stdin
@@ -40,16 +40,14 @@ sel() {
 }
 
 choose() {
-  message="${1:-"choose:"}"
+  message="${1:-"[$FILENAME]:"}"
   [[ -n "$1" ]] && shift
 
   if [[ -n "$(command -v fzf)" ]]; then
-    value="$(fzf --reverse --tac --prompt "$message ")"
+    value="$(fzf --reverse --prompt "$message ")"
     [[ -z "$value" ]] && exit 1
     echo "$value"
   else
     sel "$@"
   fi
 }
-
-bold() { echo "$(tput bold)$@$(tput sgr0)"; }

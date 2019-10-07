@@ -19,7 +19,9 @@ eval set -- "$PARAMS"
 
 [[ -e "$BINS" ]] || mkdir -p "$BINS"
 case "$1" in
-  ls) ls "$BINS";;
+  ls)
+    find "$BINS" -type f -exec basename {} \; | fzf -m --reverse --preview "cat $BINS/{}"
+    ;;
   create)
     name="${2:-"$(prompt "name:")"}"
     [[ -z "$name" ]] && log "No bins were added" && exit 1
@@ -33,7 +35,7 @@ case "$1" in
     "$VISUAL" "$BINS/$name"
     ;;
   edit)
-    name=${2:-"$(ls "$BINS" | choose)"}
+    name=${2:-"$(bin ls)"}
     [[ -z "$name" ]] && log "Nothing to edit" && exit 1
     [[ -f "$BINS/$name" ]] || {
       log "$name doesn't exist"
@@ -44,13 +46,15 @@ case "$1" in
     "$VISUAL" "$BINS/$name"
     ;;
   rm)
-    name=${2:-"$(ls "$BINS" | choose)"}
-    [[ -z "$name" ]] && log "No bins were removed" && exit 1
-    rm -rf "${BINS:?}/$name"
-    log "$name was removed"
+    names=${2:-"$(bin ls)"}
+    [[ -z "$names" ]] && log "No bins were removed" && exit 1
+    for name in $names; do
+      rm -rf "${BINS:?}/$name"
+      log "$name was removed"
+    done
     ;;
   rename)
-    old=${2:-"$(ls "$BINS" | choose)"}
+    old=${2:-"$(bins ls)"}
     new="${3:-"$(prompt "new name:")"}"
     mv "$BINS/$old" "$BINS/$new"
     log "renamed $old to $new"
