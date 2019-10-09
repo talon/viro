@@ -15,3 +15,4 @@ git clone https://github.com/talon/viro \
 - fd
 - ag
 - realpath
+- bat
