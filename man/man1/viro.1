@@ -1,0 +1,53 @@
+.Dd 2019
+.Dt VIRO 1
+.
+.Sh NAME
+.Nm viro
+.Nd an environment manager
+.
+.Sh SYNOPSIS
+.Nm viro
+.Cm env
+.Op ls
+.Op set Ar name Ar value
+.Op get Ar name
+.Op rm Ar name
+.Op has Ar name
+.
+.Nm viro
+.Cm path
+.Op ls
+.Op add Ar dir
+.Op rm Ar dir
+.Op has Ar dir
+.
+.Nm viro
+.Cm fn
+.Op new Ar name
+.Op edit Ar name
+.Op cp Ar name Ar new
+.Op rm Ar name
+.
+.Nm viro
+.Cm bin
+.Op new Ar name
+.Op edit Ar name
+.Op cp Ar name Ar new
+.Op rm Ar name
+.
+.Sh DESCRIPTION
+viro allows you to swiftly manage environment variables and create shell functions/executables.
+.
+.Sh ENVIRONMENT
+.Bl -tag -width 6n
+.It VIRO_HOME Ar path
+Where the viro source files live
+.It VIRO_USER Ar path
+Where your personal viro configuration files live. Default: $HOME/.viro
+.
+.Sh BUGS
+Bugs are tracked in GitHub Issues:
+.Sy https://github.com/talon/viro/issues
+.
+.Sh AUTHORS
+Talon Poole <hello@talon.computer>
