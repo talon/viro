@@ -14,16 +14,16 @@ esac; done
 eval set -- "$PARAMS"
 
 case "$1" in
-  env) YES="$YES" "$VIRO_HOME/src/env.sh" "${@:2}";;
-  path) "$VIRO_HOME/src/path.sh" "${@:2}";;
-  alias) YES="$YES" "$VIRO_HOME/src/alias.sh" "${@:2}";;
-  boot) "$VISUAL" "$VIRO_HOME/user/boot.sh" && refresh;;
+  bin) YES="$YES" source "$VIRO_HOME/src/bin.sh" "${@:2}";;
+  env) YES="$YES" source "$VIRO_HOME/src/env.sh" "${@:2}";;
+  path) source "$VIRO_HOME/src/path.sh" "${@:2}";;
+  alias) YES="$YES" source "$VIRO_HOME/src/alias.sh" "${@:2}";;
+  boot) "$VISUAL" source "$VIRO_HOME/user/boot.sh" && refresh;;
   install)
     [[ -n "$YES" ]] || {
       log "two lines will be added to your .bashrc file:"
       log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
       log "   at the bottom: viro core will be sourced"
-      log
     }
     if [[ -n "$YES" ]] || yorn "Continue?"; then
       sed -i '/VIRO_HOME/d' "$HOME/.bashrc"

@@ -1,4 +1,12 @@
+# Viro
+> bash your keyboard not your head
+
 # Install
+
+## Dependencies
+- fzf
+- fd
+- ag
 
 ```sh
 git clone https://github.com/talon/viro ~/.viro/

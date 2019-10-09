@@ -2,8 +2,6 @@ FILENAME="$( basename "${BASH_SOURCE[1]}" )"
 FILENAME="${FILENAME:-"util"}"
 FILENAME="${FILENAME%.*}"
 
-refresh() { exec bash; }
-
 log() { echo "[$FILENAME]" "$@"; }
 
 prompt() {
@@ -37,17 +35,4 @@ sel() {
     echo "$value"
     break
   done < /dev/tty
-}
-
-choose() {
-  message="${1:-"[$FILENAME]:"}"
-  [[ -n "$1" ]] && shift
-
-  if [[ -n "$(command -v fzf)" ]]; then
-    value="$(fzf --reverse --prompt "$message ")"
-    [[ -z "$value" ]] && exit 1
-    echo "$value"
-  else
-    sel "$@"
-  fi
 }
