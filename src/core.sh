@@ -1,10 +1,6 @@
 export PATH="$PATH:$VIRO_HOME"
-export MANPATH="$MANPATH:$VIRO_HOME/man"
+export VIRO_USER="${VIRO_USER:-$VIRO_HOME/user}"
 
-SOURCES="$VIRO_HOME/user/ENV"
-SOURCES="$SOURCES $VIRO_HOME/user/aliases"
-SOURCES="$SOURCES $VIRO_HOME/user/PATH"
-SOURCES="$SOURCES $VIRO_HOME/user/boot.sh"
-for SOURCE in $SOURCES; do
+for SOURCE in "$VIRO_USER/ENV" "$VIRO_USER/PATH" $VIRO_USER/functions/*; do
   [[ -f "$SOURCE" ]] && source "$SOURCE"
 done

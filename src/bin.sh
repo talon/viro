@@ -1,6 +1,5 @@
 source "$VIRO_HOME/src/utils.sh"
 
-VIRO_USER="${VIRO_USER:-$VIRO_HOME/user}"
 VIRO_BIN="${VIRO_BIN:-$VIRO_USER/bins}"
 
 read -r -d '' VIRO_BIN_TEMPLATE <<TEMPLATE

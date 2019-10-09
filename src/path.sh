@@ -1,6 +1,5 @@
 source "$VIRO_HOME/src/utils.sh"
 
-VIRO_USER="${VIRO_USER:-$VIRO_HOME/user}"
 VIRO_PATH="${VIRO_PATH:-$VIRO_USER/PATH}"
 
 case "$1" in

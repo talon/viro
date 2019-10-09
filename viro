@@ -17,9 +17,8 @@ eval set -- "$PARAMS"
 case "$1" in
   bin) YES="$YES" source "$VIRO_HOME/src/bin.sh" "${@:2}";;
   env) YES="$YES" source "$VIRO_HOME/src/env.sh" "${@:2}";;
-  path) source "$VIRO_HOME/src/path.sh" "${@:2}";;
-  alias) YES="$YES" source "$VIRO_HOME/src/alias.sh" "${@:2}";;
-  boot) "$VISUAL" source "$VIRO_HOME/user/boot.sh" && refresh;;
+  path) YES="$YES" source "$VIRO_HOME/src/path.sh" "${@:2}";;
+  fn) YES="$YES" source "$VIRO_HOME/src/fn.sh" "${@:2}";;
   install)
     [[ -n "$YES" ]] || {
       log "two lines will be added to your .bashrc file:"
@@ -30,7 +29,7 @@ case "$1" in
       sed -i '/VIRO_HOME/d' "$HOME/.bashrc"
       echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
       sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
-      refresh
+      exec bash
     else
       log "Maybe make a backup first?"
       log "try: mv $HOME/.bashrc $HOME/.bashrc.bak"
