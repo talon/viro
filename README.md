@@ -7,6 +7,7 @@
 - fzf
 - fd
 - ag
+- realpath
 
 ```sh
 git clone https://github.com/talon/viro ~/.viro/

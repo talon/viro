@@ -1,37 +1,50 @@
 source "$VIRO_HOME/src/utils.sh"
 
-VIRO_PATH="$VIRO_HOME/user/PATH"
+VIRO_USER="${VIRO_USER:-$VIRO_HOME/user}"
+VIRO_PATH="${VIRO_PATH:-$VIRO_USER/PATH}"
 
 case "$1" in
+  # import)
+  #   grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
+  #     name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
+  #     value="$(echo "$env" | sed "s/export .*=//")"
+  #     viro env add "$name" "$value" "$([[ -n "$YES" ]] && echo "--yes")" \
+  #       && sed -i "/export $name/d" "$HOME/.bashrc"
+  #   done
+  #   ;;
+
+  edit) "$VISUAL" "$VIRO_PATH" && exec bash;;
+
   add)
-    directory="${2:-"$(prompt "add:")"}"
-    directory="$(realpath "$directory")"
-    [[ -z "$directory" ]] && log "your PATH $(bold has not) been modified" && exit 1
-    viro path has "$directory" && log "$(bold "$directory") is already in your PATH" && exit 1
-    echo "PATH=\"\$PATH:$directory\"" >> "$VIRO_PATH"
-    log "added: $directory"
-    refresh
-    ;;
-  edit) "$VISUAL" "$VIRO_PATH" && viro refresh;;
-  rm)
-    directory="${2:-"$(viro path ls | choose)"}"
-    directory="$(realpath "$directory")"
-    [[ -z "$directory" ]] && log "your PATH $(bold has not) been modified" && exit 1
-    if yorn "remove $directory from your PATH?"; then
-      sed -i "/$(echo "$directory" | sed 's/\//\\\//g')/d" "$VIRO_PATH"
-      refresh
-    else
-      log "$directory $(bold has not) been removed from your PATH"
-    fi
-    ;;
-  has) viro path ls | grep -wq "${@:2}";;
-  import)
-    grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
-      name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
-      value="$(echo "$env" | sed "s/export .*=//")"
-      viro env add "$name" "$value" "$([[ -n "$YES" ]] && echo "--yes")" \
-        && sed -i "/export $name/d" "$HOME/.bashrc"
+    dirs="${*:2}"
+    dirs="${dirs:-"$(prompt "viro path add")"}"
+    [[ -z "$dirs" ]] && exit 1
+
+    for dir in $dirs; do
+      ! viro path has "$dir" && add_to_path="$add_to_path:\"$(realpath "$dir")\""
     done
+    echo "PATH=$(viro path ls | awk '{print "\""$0"\""}' | tr '\n' ':' | sed 's/:$//')$add_to_path" > "$VIRO_PATH"
+    exec bash
     ;;
-  ls|*) sed -e 's/PATH="$PATH://' -e 's/"//g' < "$VIRO_PATH";;
+
+  rm)
+    dirs="${*:2}"
+    dirs="${dirs:-"$(viro path ls | fzf --multi --reverse --prompt "viro path rm ")"}"
+    [[ -z "$dirs" ]] && exit 1
+
+    for dir in $dirs; do
+      dir="$(realpath "$dir")"
+      yorn "viro path rm $dir" "$YES" \
+        && PATH="${PATH//":$dir:"/":"}" \
+        && PATH="${PATH/#"$dir:"}" \
+        && PATH="${PATH/%":$dir"}"
+    done
+
+    echo "PATH=$(viro path ls | awk '{print "\""$0"\""}' | tr '\n' ':' | sed 's/:$//')" > "$VIRO_PATH"
+    exec bash
+    ;;
+
+  has) viro path ls | grep -wq "${@:2}";;
+
+  ls) echo "$PATH" | tr ":" "\n" | awk '!x[$0]++';;
 esac

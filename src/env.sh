@@ -17,9 +17,9 @@ case "$1" in
 
   set)
     name="$2"
-    name="${name:-"$(viro env | fzf --reverse --prompt "viro env set" | awk '{print $1}')"}"
-    [[ -n "$name" ]] && viro env has "${name^^}" && ! yorn "replace ${name^^}?" "$YES" && exit 1
-
+    name="${name:-"$(viro env | fzf --reverse --prompt "viro env set " | awk '{print $1}')"}"
+    [[ -n "$2" ]] && [[ -n "$name" ]] && \
+      viro env has "${name^^}" && ! yorn "replace ${name^^}?" "$YES" && exit 1
     value="${*:3}"
     value="${value:-"$(prompt "viro env set ${name^^}")"}"
     [[ -z "$value" ]] && exit 1
@@ -46,7 +46,7 @@ case "$1" in
     names="${names:-"$(
       sed -e 's/export //' -e 's/=/~/' -e "s/['\"]//g" < "$VIRO_ENV" \
         | column -t -s~ \
-        | fzf --multi --reverse --prompt "viro env rm" \
+        | fzf --multi --reverse --prompt "viro env rm " \
         | awk '{print $1}'
     )"}"
     for name in $names; do
