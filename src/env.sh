@@ -25,8 +25,6 @@ case "$1" in
 
     [[ -f "$VIRO_ENV" ]] && sed -i "/export ${name^^}=/d" "$VIRO_ENV"
     echo "export ${name^^}=\"$value\"" >> "$VIRO_ENV"
-    # FIXME: if there's anyway to apply the ENV without replacing the current shell
-    #        that would be dope
     exec bash
     ;;
 
@@ -54,8 +52,6 @@ case "$1" in
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
     done
-    # FIXME: if there's anyway to apply the ENV without replacing the current shell
-    #        that would be dope
     exec bash
     ;;
 

@@ -12,8 +12,6 @@ case "$1" in
   #   done
   #   ;;
 
-  edit) "$VISUAL" "$VIRO_PATH" && exec bash;;
-
   add)
     dirs="${*:2}"
     dirs="${dirs:-"$(prompt "viro path add")"}"
