@@ -80,6 +80,6 @@ case "$1" in
       --layout reverse \
       --preview-window 'right:99%' \
       --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_BIN/{}" \
-      --bind "enter:execute($VISUAL $VIRO_BIN/{})+accept"
+      --bind "enter:execute($VISUAL $VIRO_BIN/{})+cancel"
     ;;
 esac

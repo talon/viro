@@ -2,10 +2,12 @@
 .Dt VIRO 1
 .
 .Sh NAME
+.
 .Nm viro
 .Nd an environment manager
 .
 .Sh SYNOPSIS
+.
 .Nm viro
 .Cm env
 .Op ls
@@ -36,17 +38,56 @@
 .Op rm Ar name
 .
 .Sh DESCRIPTION
-viro allows you to swiftly manage environment variables and create shell functions/executables.
+.
+viro allows you to swiftly manage environment variables and create shell functions/executables
+by providing a thin wrapper around existing shell utilities.
+.
+.Sh EXAMPLES
+.Bl -tag -width 6n
+.
+.It viro env set NODE_ENV development
+set any environment variable
+.
+.It viro path add ~/.bin
+add directories to your PATH
+.
+.It viro fn new my-shell-fn
+create a shell function
+.
+.It viro fn edit my-shell-fn
+edit it
+.
+.It viro bin new my-bin
+create an executable shell file
+.
+.It viro bin edit my-bin
+edit it
 .
 .Sh ENVIRONMENT
 .Bl -tag -width 6n
-.It VIRO_HOME Ar path
+.
+.It VIRO_HOME
 Where the viro source files live
-.It VIRO_USER Ar path
+.
+.It VIRO_USER
 Where your personal viro configuration files live. Default: $HOME/.viro
 .
+.Sh FILES
+.Bl -tag -width 6n
+.
+.It VIRO_USER/ENV
+where viro stores your env variables
+.
+.It VIRO_USER/PATH
+where viro stores your PATH
+.
+.It VIRO_USER/functions
+where viro stores your shell functions
+.
+.It VIRO_USER/bins
+where viro stores your executables
+.
 .Sh BUGS
-Bugs are tracked in GitHub Issues:
 .Sy https://github.com/talon/viro/issues
 .
 .Sh AUTHORS

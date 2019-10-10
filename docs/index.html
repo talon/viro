@@ -1,0 +1,123 @@
+<!-- Creator     : groff version 1.22.3 -->
+<!-- CreationDate: Thu Oct 10 13:27:33 2019 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+</head>
+<body>
+
+<hr>
+
+
+<p>VIRO(1) BSD General Commands Manual VIRO(1)</p>
+
+<p style="margin-top: 1em"><b>NAME</b></p>
+
+<p style="margin-left:6%;"><b>viro</b> &mdash; an
+environment manager</p>
+
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+
+<p style="margin-left:13%;"><b>viro env</b> [ls]
+[set&nbsp;<i>name&nbsp;value</i>] [get&nbsp;<i>name</i>]
+[rm&nbsp;<i>name</i>] [has&nbsp;<i>name</i>] <b><br>
+viro path</b> [ls] [add&nbsp;<i>dir</i>]
+[rm&nbsp;<i>dir</i>] [has&nbsp;<i>dir</i>] <b><br>
+viro fn</b> [new&nbsp;<i>name</i>] [edit&nbsp;<i>name</i>]
+[cp&nbsp;<i>name&nbsp;new</i>] [rm&nbsp;<i>name</i>] <b><br>
+viro bin</b> [new&nbsp;<i>name</i>] [edit&nbsp;<i>name</i>]
+[cp&nbsp;<i>name&nbsp;new</i>] [rm&nbsp;<i>name</i>]</p>
+
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+
+<p style="margin-left:6%;">viro allows you to swiftly
+manage environment variables and create shell
+functions/executables by providing a thin wrapper around
+existing shell utilities.</p>
+
+<p style="margin-top: 1em"><b>EXAMPLES</b> <br>
+viro env set NODE_ENV development</p>
+
+<p style="margin-left:17%;">set any environment
+variable</p>
+
+<p style="margin-top: 1em">viro path add ~/.bin</p>
+
+<p style="margin-left:17%;">add directories to your
+PATH</p>
+
+<p style="margin-top: 1em">viro fn new my-shell-fn</p>
+
+<p style="margin-left:17%;">create a shell function</p>
+
+<p style="margin-top: 1em">viro fn edit my-shell-fn</p>
+
+<p style="margin-left:17%;">edit it</p>
+
+<p style="margin-top: 1em">viro bin new my-bin</p>
+
+<p style="margin-left:17%;">create an executable shell
+file</p>
+
+<p style="margin-top: 1em">viro bin edit my-bin</p>
+
+<p style="margin-left:17%;">edit it</p>
+
+<p style="margin-top: 1em"><b>ENVIRONMENT</b> <br>
+VIRO_HOME</p>
+
+<p style="margin-left:17%;">Where the viro source files
+live</p>
+
+<p style="margin-top: 1em">VIRO_USER</p>
+
+<p style="margin-left:17%;">Where your personal viro
+configuration files live. Default: $HOME/.viro</p>
+
+<p style="margin-top: 1em"><b>FILES</b> <br>
+VIRO_USER/ENV</p>
+
+<p style="margin-left:17%;">where viro stores your env
+variables</p>
+
+<p style="margin-top: 1em">VIRO_USER/PATH</p>
+
+<p style="margin-left:17%;">where viro stores your PATH</p>
+
+<p style="margin-top: 1em">VIRO_USER/functions</p>
+
+<p style="margin-left:17%;">where viro stores your shell
+functions</p>
+
+<p style="margin-top: 1em">VIRO_USER/bins</p>
+
+<p style="margin-left:17%;">where viro stores your
+executables</p>
+
+<p style="margin-top: 1em"><b>BUGS</b></p>
+
+
+<p style="margin-left:6%;"><b>https://github.com/talon/viro/issues</b></p>
+
+<p style="margin-top: 1em"><b>AUTHORS</b></p>
+
+<p style="margin-left:6%;">Talon Poole
+&lt;hello@talon.computer&gt;</p>
+
+
+<p style="margin-left:6%; margin-top: 1em">October&nbsp;10,
+2019</p>
+<hr>
+</body>
+</html>

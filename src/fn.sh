@@ -21,7 +21,7 @@ case "$1" in
       exit 1
     fi
 
-    new_fn "$name" > "$VIRO_FN/$name.sh"
+    vipe < new_fn "$name" > "$VIRO_FN/$name.sh"
     exec bash
     ;;
 
@@ -42,6 +42,14 @@ case "$1" in
     fi
     ;;
 
+  edit)
+    if [[ -n "$2" ]] && [[ -f "$VIRO_FN/$2.sh" ]] || yorn "Not found. viro bin new $2?" "$YES"; then
+      "$VISUAL" "$VIRO_FN/$2.sh" && exec bash
+    else
+      viro bin new "$2"
+    fi
+    ;;
+
   rm)
     names="${@:2}"
     names="${names:-"$(
@@ -59,20 +67,13 @@ case "$1" in
     exec bash
     ;;
 
-  edit)
-    if [[ -n "$2" ]] && [[ -f "$VIRO_FN/$2.sh" ]] || yorn "Not found. viro bin new $2?" "$YES"; then
-      "$VISUAL" "$VIRO_FN/$2.sh" && exit 0
-    else
-      viro bin new "$2"
-    fi
-    ;;
-
   *)
     fd . "$VIRO_FN" --type file --exec basename {} | fzf \
       --ansi \
       --layout reverse \
       --preview-window 'right:99%' \
       --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}" \
-      --bind "enter:execute($VISUAL $VIRO_FN/{})+accept"
+      --bind "enter:execute($VISUAL $VIRO_FN/{})+cancel"
+    exec bash
     ;;
 esac
