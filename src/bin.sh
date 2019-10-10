@@ -19,12 +19,12 @@ esac; done && eval set -- "\$PARAMS"
 echo "This bin has no functionality yet. try: bin $( basename "${BASH_SOURCE[0]}" )"
 TEMPLATE
 
-[[ -e "$VIRO_BIN" ]] || mkdir -p "$VIRO_BIN"
+[ -e "$VIRO_BIN" ] || mkdir -p "$VIRO_BIN"
 case "$1" in
   new)
     name="${2:-"$(prompt "viro bin new")"}"
-    [[ -z "$name" ]] && exit 1
-    [[ -f "$VIRO_BIN/$name" ]] && if yorn "Already exists. viro bin edit $name?" "$YES"; then
+    [ -z "$name" ] && exit 1
+    [ -f "$VIRO_BIN/$name" ] && if yorn "Already exists. viro bin edit $name?" "$YES"; then
       viro bin edit "$name" && exit 0
     else
       exit 1
@@ -43,7 +43,7 @@ case "$1" in
     )}"
     new="${3:-"$(prompt "cp $old")"}"
 
-    [[ -f "$VIRO_BIN/$new" ]] && if yorn "Already exists. overwrite $new?" "$YES"; then
+    [ -f "$VIRO_BIN/$new" ] && if yorn "Already exists. overwrite $new?" "$YES"; then
       cp "$VIRO_BIN/$old" "$VIRO_BIN/$new"
     else
       exit 1
@@ -60,14 +60,14 @@ case "$1" in
         --preview-window 'right:99%' \
         --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_BIN/{}"
     )"}"
-    [[ -z "$names" ]] && exit 1
+    [ -z "$names" ] && exit 1
     for name in $names; do
-      [[ -f "$VIRO_BIN/$name" ]] && yorn "remove $name?" "$YES" && rm "$VIRO_BIN/$name"
+      [ -f "$VIRO_BIN/$name" ] && yorn "remove $name?" "$YES" && rm "$VIRO_BIN/$name"
     done
     ;;
 
   edit)
-    if [[ -n "$2" ]] && [[ -f "$VIRO_BIN/$2" ]] || yorn "Not found. viro bin new $2?" "$YES"; then
+    if [ -n "$2" ] && [ -f "$VIRO_BIN/$2" ] || yorn "Not found. viro bin new $2?" "$YES"; then
       "$VISUAL" "$VIRO_BIN/$2" && exit 0
     else
       viro bin new "$2"

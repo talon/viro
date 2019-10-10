@@ -6,13 +6,13 @@ log() { echo "[$FILENAME]" "$@"; }
 
 prompt() {
   read -rp "[$FILENAME] $1 " value;
-  [[ -z "$value" ]] && exit 1
+  [ -z "$value" ] && exit 1
   echo "$value";
 }
 
 yorn() {
   answer="$2"
-  [[ -z "$answer" ]] && read -n 1 -rp "[$FILENAME] $1 (y/N) " answer && printf "\n"
+  [ -z "$answer" ] && read -n 1 -rp "[$FILENAME] $1 (y/N) " answer && printf "\n"
   case "$answer" in
     y|Y) return 0;;
     *) return 1;;
@@ -21,7 +21,7 @@ yorn() {
 
 sel() {
   message="${1:-"[$FILENAME]:"}"
-  [[ -n "$1" ]] && shift
+  [ -n "$1" ] && shift
 
   # hack to perserve whitespace from stdin
   local options=""
@@ -31,7 +31,7 @@ sel() {
 
   PS3="[$FILENAME] $message "
   select value in "$@"; do
-    [[ -z "$value" ]] && exit 1
+    [ -z "$value" ] && exit 1
     echo "$value"
     break
   done < /dev/tty

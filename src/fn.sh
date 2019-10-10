@@ -10,12 +10,12 @@ TEMPLATE
 echo "$VIRO_FN_TEMPLATE"
 }
 
-[[ -e "$VIRO_FN" ]] || mkdir -p "$VIRO_FN"
+[ -e "$VIRO_FN" ] || mkdir -p "$VIRO_FN"
 case "$1" in
   new)
     name="${2:-"$(prompt "viro fn new")"}"
-    [[ -z "$name" ]] && exit 1
-    [[ -f "$VIRO_FN/$name" ]] && if yorn "Already exists. viro fn edit $name?" "$YES"; then
+    [ -z "$name" ] && exit 1
+    [ -f "$VIRO_FN/$name" ] && if yorn "Already exists. viro fn edit $name?" "$YES"; then
       viro fn edit "$name" && exit 0
     else
       exit 1
@@ -35,7 +35,7 @@ case "$1" in
     )}"
     new="${3:-"$(prompt "cp $old")"}"
 
-    [[ -f "$VIRO_FN/$new" ]] && if yorn "Already exists. overwrite $new?" "$YES"; then
+    [ -f "$VIRO_FN/$new" ] && if yorn "Already exists. overwrite $new?" "$YES"; then
       cp "$VIRO_FN/$old" "$VIRO_FN/$new"
     else
       exit 1
@@ -43,7 +43,7 @@ case "$1" in
     ;;
 
   edit)
-    if [[ -n "$2" ]] && [[ -f "$VIRO_FN/$2.sh" ]] || yorn "Not found. viro bin new $2?" "$YES"; then
+    if [ -n "$2" ] && [ -f "$VIRO_FN/$2.sh" ] || yorn "Not found. viro bin new $2?" "$YES"; then
       "$VISUAL" "$VIRO_FN/$2.sh" && exec bash
     else
       viro bin new "$2"
@@ -60,9 +60,9 @@ case "$1" in
         --preview-window 'right:99%' \
         --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}"
     )"}"
-    [[ -z "$names" ]] && exit 1
+    [ -z "$names" ] && exit 1
     for name in $names; do
-      [[ -f "$VIRO_FN/$name" ]] && yorn "remove $name?" "$YES" && rm "$VIRO_FN/$name"
+      [ -f "$VIRO_FN/$name" ] && yorn "remove $name?" "$YES" && rm "$VIRO_FN/$name"
     done
     exec bash
     ;;

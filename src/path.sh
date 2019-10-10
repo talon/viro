@@ -7,7 +7,7 @@ case "$1" in
   #   grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
   #     name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
   #     value="$(echo "$env" | sed "s/export .*=//")"
-  #     viro env add "$name" "$value" "$([[ -n "$YES" ]] && echo "--yes")" \
+  #     viro env add "$name" "$value" "$([ -n "$YES" ] && echo "--yes")" \
   #       && sed -i "/export $name/d" "$HOME/.bashrc"
   #   done
   #   ;;
@@ -15,7 +15,7 @@ case "$1" in
   add)
     dirs="${*:2}"
     dirs="${dirs:-"$(prompt "viro path add")"}"
-    [[ -z "$dirs" ]] && exit 1
+    [ -z "$dirs" ] && exit 1
 
     for dir in $dirs; do
       ! viro path has "$dir" && add_to_path="$add_to_path:\"$(realpath "$dir")\""
@@ -27,7 +27,7 @@ case "$1" in
   rm)
     dirs="${*:2}"
     dirs="${dirs:-"$(viro path ls | fzf --multi --reverse --prompt "viro path rm ")"}"
-    [[ -z "$dirs" ]] && exit 1
+    [ -z "$dirs" ] && exit 1
 
     for dir in $dirs; do
       dir="$(realpath "$dir")"

@@ -1,5 +1,5 @@
 #!/bin/bash
-export VIRO_HOME="${VIRO_HOME:-"$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"}"
+export VIRO_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$VIRO_HOME/src/utils.sh"
 
 YES=""
@@ -16,23 +16,29 @@ eval set -- "$PARAMS"
 
 case "$1" in
   install)
-    [[ -n "$YES" ]] || {
-      log "two lines will be added to your .bashrc file:"
+    PROFILE="$(
+      if [ -f "$HOME/.bash_profile" ]; then
+      echo "$HOME/.bash_profile"
+    else
+      echo "$HOME/.profile"
+    fi)"
+    [ -n "$YES" ] || {
+      log "two lines will be added to $PROFILE:"
       log "   at the top: the path to your viro installation will be exported as \$VIRO_HOME"
       log "   at the bottom: viro core will be sourced"
     }
-    if [[ -n "$YES" ]] || yorn "Continue?"; then
-      sed -i '/VIRO_HOME/d' "$HOME/.bashrc"
-      echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$HOME/.bashrc"
-      sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$HOME/.bashrc"
+    if [ -n "$YES" ] || yorn "Continue?"; then
+      sed -i '/VIRO_HOME/d' "$PROFILE"
+      echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$PROFILE"
+      sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$PROFILE"
       exec bash
     else
       log "Maybe make a backup first?"
-      log "try: mv $HOME/.bashrc $HOME/.bashrc.bak"
+      log "try: mv $PROFILE $PROFILE.bak"
     fi
     ;;
   *)
-    [[ -f "$VIRO_HOME/src/$1.sh" ]] \
+    [ -f "$VIRO_HOME/src/$1.sh" ] \
       && YES="$YES" source "$VIRO_HOME/src/$1.sh" "${@:2}"
     ;;
 esac
