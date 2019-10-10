@@ -52,7 +52,7 @@ case "$1" in
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
     done
-    . "$VIRO_ENV"
+    eval "unset $name"
     ;;
 
   has) [ -n "$(printenv "$2")" ];;
