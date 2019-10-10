@@ -4,8 +4,9 @@
 # Install
 
 ```sh
-git clone https://github.com/talon/viro ~/.viro/
-~/.viro/viro install
+git clone https://github.com/talon/viro \
+  && cd viro \
+  && ./viro install
 ```
 > put this repo somewhere and then use [`./viro`](./viro) `install` to strap in
 
@@ -14,26 +15,4 @@ git clone https://github.com/talon/viro ~/.viro/
 - fd
 - ag
 - realpath
-
-# backerpacker's guide to POSIX
-> WIP
-
-## input
-- read
-- fzf
-
-## read
-- tail
-- head
 - bat
-
-## write
-- printf
-- sed
-
-## parse
-- ag
-- awk
-
-# UI
-- tput
