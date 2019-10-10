@@ -25,7 +25,6 @@ case "$1" in
 
     [ -f "$VIRO_ENV" ] && sed -i "/export ${name^^}=/d" "$VIRO_ENV"
     echo "export ${name^^}=\"$value\"" >> "$VIRO_ENV"
-    exec bash
     ;;
 
   get)
@@ -52,12 +51,10 @@ case "$1" in
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
     done
-    exec bash
     ;;
 
   has) [ -n "$(printenv "$2")" ];;
 
-  edit) "$VISUAL" "$VIRO_ENV" && exec bash;;
 
   ls) printenv \
       | sed -e 's/export //' -e 's/=/|/' -e "s/['\"]//g" \

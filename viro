@@ -28,10 +28,10 @@ case "$1" in
       log "   at the bottom: viro core will be sourced"
     }
     if [ -n "$YES" ] || yorn "Continue?"; then
-      sed -i '/VIRO_HOME/d' "$PROFILE"
+      [ -f "$PROFILE" ] && sed -i '/VIRO_HOME/d' "$PROFILE"
       echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$PROFILE"
       sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$PROFILE"
-      exec bash
+      source "$PROFILE"
     else
       log "Maybe make a backup first?"
       log "try: mv $PROFILE $PROFILE.bak"

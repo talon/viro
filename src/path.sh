@@ -21,7 +21,6 @@ case "$1" in
       ! viro path has "$dir" && add_to_path="$add_to_path:\"$(realpath "$dir")\""
     done
     echo "PATH=$(viro path ls | awk '{print "\""$0"\""}' | tr '\n' ':' | sed 's/:$//')$add_to_path" > "$VIRO_PATH"
-    exec bash
     ;;
 
   rm)
@@ -38,7 +37,6 @@ case "$1" in
     done
 
     echo "PATH=$(viro path ls | awk '{print "\""$0"\""}' | tr '\n' ':' | sed 's/:$//')" > "$VIRO_PATH"
-    exec bash
     ;;
 
   has) viro path ls | grep -wq "${@:2}";;

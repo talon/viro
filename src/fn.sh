@@ -22,7 +22,6 @@ case "$1" in
     fi
 
     vipe < new_fn "$name" > "$VIRO_FN/$name.sh"
-    exec bash
     ;;
 
   cp)
@@ -44,7 +43,7 @@ case "$1" in
 
   edit)
     if [ -n "$2" ] && [ -f "$VIRO_FN/$2.sh" ] || yorn "Not found. viro bin new $2?" "$YES"; then
-      "$VISUAL" "$VIRO_FN/$2.sh" && exec bash
+      "$VISUAL" "$VIRO_FN/$2.sh"
     else
       viro bin new "$2"
     fi
@@ -64,7 +63,6 @@ case "$1" in
     for name in $names; do
       [ -f "$VIRO_FN/$name" ] && yorn "remove $name?" "$YES" && rm "$VIRO_FN/$name"
     done
-    exec bash
     ;;
 
   *)
@@ -74,6 +72,5 @@ case "$1" in
       --preview-window 'right:99%' \
       --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}" \
       --bind "enter:execute($VISUAL $VIRO_FN/{})+cancel"
-    exec bash
     ;;
 esac
