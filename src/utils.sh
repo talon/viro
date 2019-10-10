@@ -6,7 +6,7 @@ log() { echo "[$FILENAME]" "$@"; }
 
 prompt() {
   read -rp "[$FILENAME] $1 " value;
-  [ -z "$value" ] && exit 1
+  [ -z "$value" ] && return 1
   echo "$value";
 }
 
@@ -31,7 +31,7 @@ sel() {
 
   PS3="[$FILENAME] $message "
   select value in "$@"; do
-    [ -z "$value" ] && exit 1
+    [ -z "$value" ] && return 1
     echo "$value"
     break
   done < /dev/tty

@@ -4,11 +4,9 @@
 # Install
 
 ```sh
-git clone https://github.com/talon/viro \
-  && cd viro \
-  && ./viro install
+git clone https://github.com/talon/viro
+source viro/src/core.sh && viro install
 ```
-> put this repo somewhere and then use [`./viro`](./viro) `install` to strap in
 
 ## Dependencies
 - fzf

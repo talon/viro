@@ -18,13 +18,14 @@ case "$1" in
     name="$2"
     name="${name:-"$(viro env ls | fzf --reverse --prompt "viro env set " | awk '{print $1}')"}"
     [ -n "$2" ] && [ -n "$name" ] && \
-      viro env has "${name^^}" && ! yorn "replace ${name^^}?" "$YES" && exit 1
+      viro env has "${name^^}" && ! yorn "replace ${name^^}?" "$YES" && return 1
     value="${*:3}"
     value="${value:-"$(prompt "viro env set ${name^^}")"}"
-    [ -z "$value" ] && exit 1
+    [ -z "$value" ] && return 1
 
     [ -f "$VIRO_ENV" ] && sed -i "/export ${name^^}=/d" "$VIRO_ENV"
     echo "export ${name^^}=\"$value\"" >> "$VIRO_ENV"
+    . "$VIRO_ENV"
     ;;
 
   get)
@@ -51,6 +52,7 @@ case "$1" in
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
     done
+    . "$VIRO_ENV"
     ;;
 
   has) [ -n "$(printenv "$2")" ];;

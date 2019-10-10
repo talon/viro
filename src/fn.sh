@@ -14,14 +14,17 @@ echo "$VIRO_FN_TEMPLATE"
 case "$1" in
   new)
     name="${2:-"$(prompt "viro fn new")"}"
-    [ -z "$name" ] && exit 1
+    [ -z "$name" ] && return 1
+    ! [ -f "$VIRO_FN/$name.sh" ] && new_fn "$name" > "$VIRO_FN/$name.sh" \
+      && "$VISUAL" "$VIRO_FN/$name.sh" \
+      && . "$VIRO_FN/$name.sh" \
+      && return 0
     if [ -f "$VIRO_FN/$name.sh" ] && yorn "Already exists. viro fn edit $name?" "$YES"; then
-      viro fn edit "$name" && exit 0
+      viro fn edit "$name" && return 0
     else
-      exit 1
+      return 1
     fi
-
-    new_fn "$name" > "$VIRO_FN/$name.sh" && "$VISUAL" "$VIRO_FN/$name.sh"
+    . "$VIRO_FN/$name.sh"
     ;;
 
   cp)
@@ -36,8 +39,9 @@ case "$1" in
 
     [ -f "$VIRO_FN/$new" ] && if yorn "Already exists. overwrite $new?" "$YES"; then
       cp "$VIRO_FN/$old" "$VIRO_FN/$new"
+      . "$VIRO_FN/$new"
     else
-      exit 1
+      return 1
     fi
     ;;
 
@@ -47,30 +51,32 @@ case "$1" in
     else
       viro bin new "$2"
     fi
+    . "$VIRO_FN/$2.sh"
     ;;
 
   rm)
     names="${@:2}"
     names="${names:-"$(
-      fd . "$VIRO_FN" --type file --exec basename {} | fzf \
+      fd . "$VIRO_FN" --type file --exec basename {.} | fzf \
         --multi \
         --ansi \
         --layout reverse \
         --preview-window 'right:99%' \
-        --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}"
+        --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}.sh"
     )"}"
-    [ -z "$names" ] && exit 1
+    [ -z "$names" ] && return 1
     for name in $names; do
-      [ -f "$VIRO_FN/$name" ] && yorn "remove $name?" "$YES" && rm "$VIRO_FN/$name"
+      [ -f "$VIRO_FN/$name.sh" ] && yorn "remove $name?" "$YES" && rm "$VIRO_FN/$name.sh" && eval "unset -f $name"
     done
     ;;
 
   *)
-    fd . "$VIRO_FN" --type file --exec basename {} | fzf \
+    name="$(fd . "$VIRO_FN" --type file --exec basename {.} | fzf \
       --ansi \
       --layout reverse \
       --preview-window 'right:99%' \
-      --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}" \
-      --bind "enter:execute($VISUAL $VIRO_FN/{})+cancel"
+      --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}.sh"
+    )"
+    "$VISUAL" "$VIRO_FN/$name.sh" && . "$VIRO_FN/$name.sh"
     ;;
 esac
