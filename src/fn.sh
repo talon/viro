@@ -1,4 +1,4 @@
-source "$VIRO_HOME/src/utils.sh"
+. "$VIRO_HOME/src/utils.sh"
 
 VIRO_FN="${VIRO_FN:-$VIRO_USER/functions}"
 
@@ -15,13 +15,13 @@ case "$1" in
   new)
     name="${2:-"$(prompt "viro fn new")"}"
     [ -z "$name" ] && exit 1
-    [ -f "$VIRO_FN/$name" ] && if yorn "Already exists. viro fn edit $name?" "$YES"; then
+    if [ -f "$VIRO_FN/$name.sh" ] && yorn "Already exists. viro fn edit $name?" "$YES"; then
       viro fn edit "$name" && exit 0
     else
       exit 1
     fi
 
-    vipe < new_fn "$name" > "$VIRO_FN/$name.sh"
+    new_fn "$name" > "$VIRO_FN/$name.sh" && "$VISUAL" "$VIRO_FN/$name.sh"
     ;;
 
   cp)

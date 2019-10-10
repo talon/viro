@@ -1,4 +1,4 @@
-source "$VIRO_HOME/src/utils.sh"
+. "$VIRO_HOME/src/utils.sh"
 
 VIRO_ENV="${VIRO_ENV:-$VIRO_USER/ENV}"
 

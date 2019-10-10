@@ -1,4 +1,4 @@
-source "$VIRO_HOME/src/utils.sh"
+. "$VIRO_HOME/src/utils.sh"
 
 VIRO_BIN="${VIRO_BIN:-$VIRO_USER/bins}"
 

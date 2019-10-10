@@ -1,6 +1,6 @@
 #!/bin/bash
 export VIRO_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source "$VIRO_HOME/src/utils.sh"
+. "$VIRO_HOME/src/utils.sh"
 
 YES=""
 PARAMS=""
@@ -29,9 +29,9 @@ case "$1" in
     }
     if [ -n "$YES" ] || yorn "Continue?"; then
       [ -f "$PROFILE" ] && sed -i '/VIRO_HOME/d' "$PROFILE"
-      echo "source \"\$VIRO_HOME/src/core.sh\"" >> "$PROFILE"
+      echo ". \"\$VIRO_HOME/src/core.sh\"" >> "$PROFILE"
       sed -i "1i export VIRO_HOME=\"$VIRO_HOME\"" "$PROFILE"
-      source "$PROFILE"
+      . "$PROFILE"
     else
       log "Maybe make a backup first?"
       log "try: mv $PROFILE $PROFILE.bak"
@@ -39,6 +39,6 @@ case "$1" in
     ;;
   *)
     [ -f "$VIRO_HOME/src/$1.sh" ] \
-      && YES="$YES" source "$VIRO_HOME/src/$1.sh" "${@:2}"
+      && YES="$YES" . "$VIRO_HOME/src/$1.sh" "${@:2}"
     ;;
 esac
