@@ -6,7 +6,7 @@ RUN sed -i 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \
   && apk update \
   && apk upgrade --update-cache --available
 
-RUN apk add --no-cache man man-pages curl fzf the_silver_searcher util-linux bat
+RUN apk add --no-cache curl fzf the_silver_searcher util-linux bat
 
 COPY . /root/viro
 ENV VIRO_SRC /root/viro/src

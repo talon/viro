@@ -33,7 +33,7 @@ viro() {
       ;;
     *)
       cmd="$1" && shift
-      ! [ -f "$VIRO_SRC/$cmd.sh" ] && man viro && return 1
+      ! [ -f "$VIRO_SRC/$cmd.sh" ] && echo "unknown command" && return 1
       . "$VIRO_SRC/$cmd.sh" "$@"
       ;;
   esac
