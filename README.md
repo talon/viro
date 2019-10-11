@@ -43,7 +43,7 @@ EXAMPLES
              edit it
 
 ENVIRONMENT
-     VIRO_HOME
+     VIRO_SRC
              Where the viro source files live
 
      VIRO_USER
