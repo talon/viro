@@ -1,21 +1,3 @@
-# Viro
-> bash your keyboard not your head
-
-# Install
-
-```sh
-git clone https://github.com/talon/viro
-VIRO_SRC="$(pwd)/viro/src" . viro/src/core.sh && viro install
-```
-
-# Try
-
-```sh
-docker run -it --rm talon/viro
-```
-
-# Man
-
 ```
 NAME
      viro — an environment manager
@@ -26,7 +8,7 @@ SYNOPSIS
      viro fn [new name] [edit name] [cp name new] [rm name]
 
 DESCRIPTION
-     viro allows you to swiftly manage environment variables and create shell functions/executables by
+     viro allows you to swiftly manage environment variables and create shell functions by
      providing a thin wrapper around existing shell utilities.
 
 EXAMPLES
@@ -60,7 +42,20 @@ FILES
              where viro stores your shell functions
 ```
 
+# Install
+
 ## Dependencies
 - fzf
 - realpath
 - bat
+
+```sh
+git clone https://github.com/talon/viro
+VIRO_SRC="$(pwd)/viro/src" . viro/src/core.sh && viro install
+```
+
+# Try
+
+```sh
+docker run -it --rm talon/viro
+```
