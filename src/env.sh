@@ -19,7 +19,7 @@ case "$1" in
     [ -z "$name" ] && name="$(viro env ls | fzf --reverse --prompt "viro env set " | awk '{print $1}')"
     [ -z "$name" ] && return 1
     name="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
-    viro env has "$name" && ! yorn "replace $name?" "$YES" && return 1
+    viro env has "$name" && ! yorn "replace $name?" "$YORN" && return 1
 
     value=""
     [ -n "$2" ]     && value="$2" && shift
@@ -54,7 +54,7 @@ case "$1" in
     names=""
     while [ -n "$2" ]; do
       name="$(echo "$2" | tr '[:lower:]' '[:upper:]')"
-      viro env has "$name" && names="$([ -n "$names" ] && echo "$names $2" || echo "$2")" && shift
+      viro env has "$name" && names="$names $2" && shift
     done
 
     [ -z "$names" ] && names="$(
@@ -68,7 +68,7 @@ case "$1" in
 
     for name in $names; do
       name="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
-      if yorn "viro env rm $name?" "$YES"; then
+      if yorn "viro env rm $name?" "$YORN"; then
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
       eval "unset $name"
