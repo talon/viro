@@ -13,24 +13,23 @@ case "$1" in
   #   ;;
 
   add)
-    dirs="${*:2}"
-    dirs="${dirs:-"$(prompt "viro path add")"}"
-    [ -z "$dirs" ] && return 1
-
-    for dir in $dirs; do
-      ! viro path has "$dir" && add_to_path="$add_to_path:\"$(realpath "$dir")\""
+    add_to_path=""
+    while [ -n "$2" ]; do
+      dir="$2" && shift
+      if ! viro path has "$dir"; then
+        add_to_path="$([ -n "$add_to_path" ] && echo "$add_to_path"):\"$(realpath "$dir")\""
+      fi
     done
+    [ -z "$add_to_path" ] && add_to_path=":\"$(prompt "viro path add")\""
+    [ -z "$add_to_path" ] && return 1
     echo "PATH=$(viro path ls | awk '{print "\""$0"\""}' | tr '\n' ':' | sed 's/:$//')$add_to_path" > "$VIRO_PATH"
     . "$VIRO_PATH"
     ;;
 
   rm)
-    dirs="${*:2}"
-    dirs="${dirs:-"$(viro path ls | fzf --multi --reverse --prompt "viro path rm ")"}"
-    [ -z "$dirs" ] && return 1
-
-    for dir in $dirs; do
-      dir="$(realpath "$dir")"
+    # dirs="${dirs:-"$(viro path ls | fzf --multi --reverse --prompt "viro path rm ")"}"
+    while [ -n "$2" ]; do
+      dir="$(realpath "$2")" && shift
       yorn "viro path rm $dir" "$YES" \
         && PATH="${PATH//":$dir:"/":"}" \
         && PATH="${PATH/#"$dir:"}" \
