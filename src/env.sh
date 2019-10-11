@@ -1,8 +1,7 @@
-. "$VIRO_HOME/src/utils.sh"
+. "$VIRO_SRC/utils.sh"
 
 VIRO_ENV="${VIRO_ENV:-$VIRO_USER/ENV}"
 
-[ -e "$(dirname "$VIRO_ENV")" ] && mkdir -p "$(dirname "$VIRO_ENV")"
 case "$1" in
   # import)
   #   rc="${2:-$HOME/.bashrc}"
@@ -15,22 +14,35 @@ case "$1" in
   #   ;;
 
   set)
-    name="$2"
-    name="${name:-"$(viro env ls | fzf --reverse --prompt "viro env set " | awk '{print $1}')"}"
-    [ -n "$2" ] && [ -n "$name" ] && \
-      viro env has "${name^^}" && ! yorn "replace ${name^^}?" "$YES" && return 1
-    value="${*:3}"
-    value="${value:-"$(prompt "viro env set ${name^^}")"}"
+    name=""
+    [ -n "$2" ]    && name="$2" && shift
+    [ -z "$name" ] && name="$(viro env ls | fzf --reverse --prompt "viro env set " | awk '{print $1}')"
+    [ -z "$name" ] && return 1
+    name="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
+    viro env has "$name" && ! yorn "replace $name?" "$YES" && return 1
+
+    value=""
+    [ -n "$2" ]     && value="$2" && shift
+    [ -z "$value" ] && value="$(prompt "viro env set $name")"
     [ -z "$value" ] && return 1
 
-    [ -f "$VIRO_ENV" ] && sed -i "/export ${name^^}=/d" "$VIRO_ENV"
-    echo "export ${name^^}=\"$value\"" >> "$VIRO_ENV"
+    [ -e "$(dirname "$VIRO_ENV")" ] || mkdir -p "$(dirname "$VIRO_ENV")" && touch "$VIRO_ENV"
+
+    sed -i "/export $name=/d" "$VIRO_ENV"
+    echo "export $name=\"$value\"" >> "$VIRO_ENV"
     . "$VIRO_ENV"
+    echo "$value"
     ;;
 
   get)
-    name="${2:-"$(viro env ls | fzf --reverse --prompt "viro env get" | awk '{print $1}')"}"
-    value="$(printenv "${name^^}")"
+    name=""
+    [ -n "$2" ]    && name="$2" && shift
+    [ -z "$name" ] && name="$(viro env ls | fzf --reverse --prompt "viro env set " | awk '{print $1}')"
+    [ -z "$name" ] && return 1
+    name="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
+
+    value="$(printenv "$name")"
+
     if [ -n "$value" ]; then
       echo "$value"
     else
@@ -39,20 +51,28 @@ case "$1" in
     ;;
 
   rm)
-    names="${*:2}"
-    names="${names:-"$(
+    names=""
+    while [ -n "$2" ]; do
+      name="$(echo "$2" | tr '[:lower:]' '[:upper:]')"
+      viro env has "$name" && names="$([ -n "$names" ] && echo "$names $2" || echo "$2")" && shift
+    done
+
+    [ -z "$names" ] && names="$(
       sed -e 's/export //' -e 's/=/~/' -e "s/['\"]//g" < "$VIRO_ENV" \
         | column -t -s~ \
         | fzf --multi --reverse --prompt "viro env rm " \
         | awk '{print $1}'
-    )"}"
+    )"
+
+    [ -z "$names" ] && return 1
+
     for name in $names; do
-      name="${name^^}"
+      name="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
       if yorn "viro env rm $name?" "$YES"; then
         sed -i "/export $name=/d" "$VIRO_ENV"
       fi
+      eval "unset $name"
     done
-    eval "unset $name"
     ;;
 
   has) [ -n "$(printenv "$2")" ];;
@@ -64,4 +84,6 @@ case "$1" in
       | grep -v "PATH" \
       | column -t -s\|
       ;;
+
+  *) viro env set "$2";;
 esac

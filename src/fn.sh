@@ -1,4 +1,4 @@
-. "$VIRO_HOME/src/utils.sh"
+. "$VIRO_SRC/utils.sh"
 
 VIRO_FN="${VIRO_FN:-$VIRO_USER/functions}"
 
@@ -31,6 +31,7 @@ case "$1" in
     old="${2:-$(
       fd . "$VIRO_FN" --type file --exec basename {} | fzf \
         --ansi \
+        --prompt "viro fn cp " \
         --layout reverse \
         --preview-window 'right:99%' \
         --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}"
@@ -46,12 +47,20 @@ case "$1" in
     ;;
 
   edit)
-    if [ -n "$2" ] && [ -f "$VIRO_FN/$2.sh" ] || yorn "Not found. viro bin new $2?" "$YES"; then
-      "$VISUAL" "$VIRO_FN/$2.sh"
+    name="${2:-"$(fd . "$VIRO_FN" --type file --exec basename {.} | fzf \
+      --ansi \
+      --prompt "viro fn edit " \
+      --layout reverse \
+      --preview-window 'right:99%' \
+      --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}.sh"
+    )"}"
+    [ -z "$name" ] && return 1
+    if [ -n "$name" ] && [ -f "$VIRO_FN/$name.sh" ] || yorn "Not found. viro bin new $name?" "$YES"; then
+      "$VISUAL" "$VIRO_FN/$name.sh"
     else
-      viro bin new "$2"
+      viro bin new "$name"
     fi
-    . "$VIRO_FN/$2.sh"
+    . "$VIRO_FN/$name.sh"
     ;;
 
   rm)
@@ -59,6 +68,7 @@ case "$1" in
     names="${names:-"$(
       fd . "$VIRO_FN" --type file --exec basename {.} | fzf \
         --multi \
+        --prompt "viro fn rm " \
         --ansi \
         --layout reverse \
         --preview-window 'right:99%' \
@@ -70,13 +80,5 @@ case "$1" in
     done
     ;;
 
-  *)
-    name="$(fd . "$VIRO_FN" --type file --exec basename {.} | fzf \
-      --ansi \
-      --layout reverse \
-      --preview-window 'right:99%' \
-      --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}.sh"
-    )"
-    "$VISUAL" "$VIRO_FN/$name.sh" && . "$VIRO_FN/$name.sh"
-    ;;
+  *) viro fn edit "$2";;
 esac
