@@ -5,7 +5,7 @@
 
 ```sh
 git clone https://github.com/talon/viro
-source viro/src/core.sh && viro install
+VIRO_SRC="$(pwd)/viro/src" . viro/src/core.sh && viro install
 ```
 
 ## Dependencies
