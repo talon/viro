@@ -3,15 +3,6 @@
 VIRO_PATH="${VIRO_PATH:-$VIRO_USER/PATH}"
 
 case "$1" in
-  # import)
-  #   grep -vE "(VIRO_HOME|PATH)" "$HOME/.bashrc" | grep -E "export" | while read -r env; do
-  #     name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
-  #     value="$(echo "$env" | sed "s/export .*=//")"
-  #     viro env add "$name" "$value" "$([ -n "$YORN" ] && echo "--yes")" \
-  #       && sed -i "/export $name/d" "$HOME/.bashrc"
-  #   done
-  #   ;;
-
   add)
     add_to_path=""
     while [ -n "$2" ]; do

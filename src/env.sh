@@ -3,16 +3,6 @@
 VIRO_ENV="${VIRO_ENV:-$VIRO_USER/ENV}"
 
 case "$1" in
-  # import)
-  #   rc="${2:-$HOME/.bashrc}"
-  #   echo "$rc"
-  #   grep -vE "(VIRO_HOME|PATH)" "$rc" | grep -E "export" | while read -r env; do
-  #     name="$(echo "$env" | sed 's/=/ /' | awk '{print $2}')"
-  #     value="$(echo "$env" | sed "s/export .*=//")"
-  #     echo "$name"
-  #   done
-  #   ;;
-
   set)
     name=""
     [ -n "$2" ]    && name="$2" && shift
