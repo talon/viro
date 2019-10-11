@@ -69,16 +69,12 @@ case "$1" in
       --preview  "bat --theme base16 --style snip --color always --language sh $VIRO_FN/{}.sh"
     )"
     [ -z "$name" ] && return 1
-
-    [ -z "$name" ] && return 1
-    if [ -n "$name" ] && [ -f "$VIRO_FN/$name.sh" ] || yorn "Not found. viro bin new $name?" "$YORN"; then
-      "$VISUAL" "$VIRO_FN/$name.sh"
-    else
-      viro bin new "$name"
+    [ -f "$VIRO_FN/$name.sh" ] && "$VISUAL" "$VIRO_FN/$name.sh"
+    if ! [ -f "$VIRO_FN/$name.sh" ] && yorn "Not found. viro fn new $name?" "$YORN"; then
+      viro fn new "$name" && return 0
     fi
     . "$VIRO_FN/$name.sh"
     ;;
-
   rm)
     names=""
     while [ -n "$2" ]; do

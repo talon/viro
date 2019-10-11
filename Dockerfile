@@ -1,11 +1,12 @@
 FROM alpine
 
-# Update repositories to the edge branch
+# Update repositories to the edge branch and add testing
 RUN sed -i 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \
+  && echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
   && apk update \
   && apk upgrade --update-cache --available
 
-RUN apk add --no-cache man man-pages curl fzf the_silver_searcher util-linux
+RUN apk add --no-cache man man-pages curl fzf the_silver_searcher util-linux bat
 
 COPY . /root/viro
 ENV VIRO_SRC /root/viro/src
